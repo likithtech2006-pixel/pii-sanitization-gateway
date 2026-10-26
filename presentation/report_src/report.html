@@ -1,0 +1,869 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PII Sanitization Gateway — Final Project Report</title>
+<style>
+  @page { size: A4; margin: 18mm 17mm 20mm 17mm;
+    @bottom-left { content: "PII Sanitization Gateway · Final Project Report"; font: 8pt -apple-system, Helvetica, Arial, sans-serif; color: #8A94A3; }
+    @bottom-right { content: "Page " counter(page) " of " counter(pages); font: 8pt -apple-system, Helvetica, Arial, sans-serif; color: #8A94A3; } }
+  @page :first { margin: 0; @bottom-left { content: none; } @bottom-right { content: none; } }
+  :root { --navy:#0B1F3A; --ink:#1A2433; --muted:#5B6B80; --line:#D9DFE7; --soft:#F3F5F8; --orange:#E2641C;
+          --green:#0E7A52; --red:#B42318; --amber:#9A6100; }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { font-family: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif; color: var(--ink);
+         font-size: 10pt; line-height: 1.5; margin: 0; }
+  h1, h2, h3, h4 { color: var(--navy); line-height: 1.25; margin: 0; }
+  h1 { font-size: 21pt; letter-spacing: -.01em; margin: 0 0 4mm; padding-top: 1mm; }
+  h1 .num { color: var(--orange); margin-right: 3mm; }
+  h2 { font-size: 13.2pt; margin: 6mm 0 2.2mm; }
+  h3 { font-size: 11pt; margin: 4.5mm 0 1.5mm; }
+  p { margin: 0 0 2.6mm; }
+  ul, ol { margin: 0 0 2.8mm; padding-left: 5.5mm; }
+  li { margin: 0 0 1.1mm; }
+  code, .mono { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 8.9pt; background: var(--soft);
+                padding: .2mm 1.1mm; border-radius: 1mm; }
+  pre { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 8.4pt; background: #0F1B2D; color: #E3EAF3;
+        padding: 3mm 4mm; border-radius: 2mm; white-space: pre-wrap; margin: 0 0 3mm; line-height: 1.45; break-inside: avoid; }
+  pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
+  table { width: 100%; border-collapse: collapse; margin: 1.5mm 0 4mm; font-size: 9pt; break-inside: auto; }
+  th { background: var(--navy); color: #fff; text-align: left; font-weight: 600; padding: 1.8mm 2.2mm; }
+  td { border-bottom: 1px solid var(--line); padding: 1.6mm 2.2mm; vertical-align: top; }
+  tr { break-inside: avoid; }
+  tr:nth-child(even) td { background: #FAFBFC; }
+  td b, td strong { color: var(--navy); }
+  .chapter { break-before: page; }
+  .lead { font-size: 11pt; color: #2A374A; }
+  .muted { color: var(--muted); }
+  .small { font-size: 8.6pt; }
+  .callout { border: 1px solid var(--line); background: var(--soft); border-radius: 2mm; padding: 3mm 4mm; margin: 2mm 0 4mm; break-inside: avoid; }
+  .callout.orange { border-color: #F2C4A6; background: #FDF3EC; }
+  .callout.green { border-color: #BFE3D1; background: #EEF8F3; }
+  .callout.red { border-color: #F2C3BD; background: #FDF0EE; }
+  .callout b.t { display: block; color: var(--navy); margin-bottom: 1mm; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3.5mm; }
+  .kpi { border: 1px solid var(--line); border-radius: 2mm; padding: 2.4mm 3.2mm; break-inside: avoid; }
+  .kpi .v { font-size: 17pt; font-weight: 750; color: var(--navy); line-height: 1.1; }
+  .kpi .l { font-size: 8.4pt; color: var(--muted); margin-top: 1mm; }
+  .tag { font-family: "SF Mono", Menlo, monospace; font-size: 8.5pt; color: #B24E10; background: #FDEEE3; border: 1px solid #F3C9AC;
+         border-radius: 1mm; padding: 0 1mm; white-space: nowrap; }
+  .ok { color: var(--green); font-weight: 700; } .bad { color: var(--red); font-weight: 700; } .warn { color: var(--amber); font-weight: 700; }
+  figure { margin: 2mm 0 5mm; break-inside: avoid; }
+  figure img { width: 100%; border: 1px solid var(--line); border-radius: 2mm; display: block; }
+  figcaption { font-size: 8.5pt; color: var(--muted); margin-top: 1.5mm; }
+  svg text { font-family: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif; }
+  .toc { columns: 2; column-gap: 10mm; font-size: 10pt; }
+  .toc div { break-inside: avoid; padding: 1mm 0; border-bottom: 1px dotted var(--line); }
+  .toc .n { color: var(--orange); font-weight: 700; display: inline-block; width: 9mm; }
+  /* cover */
+  .cover { height: 297mm; display: flex; flex-direction: column; justify-content: space-between; background: var(--navy);
+           color: #fff; margin: 0; padding: 30mm 22mm 24mm; }
+  .cover .eyebrow { color: #F59A62; font-weight: 700; letter-spacing: .18em; font-size: 9pt; text-transform: uppercase; }
+  .cover h1 { color: #fff; font-size: 36pt; letter-spacing: -.02em; margin: 6mm 0 4mm; line-height: 1.05; }
+  .cover .sub { font-size: 15pt; color: #CFD8E5; max-width: 140mm; }
+  .cover .meta { font-size: 10pt; color: #CFD8E5; line-height: 1.8; }
+  .cover .meta b { color: #fff; }
+  .cover .chips span { display: inline-block; font-family: "SF Mono", Menlo, monospace; font-size: 9pt; color: #fff;
+           background: #E2641C; border-radius: 10mm; padding: 1mm 3.5mm; margin: 0 2mm 2mm 0; }
+</style>
+</head>
+<body>
+
+<!-- ============================== COVER ============================== -->
+<section class="cover">
+  <div>
+    <div class="eyebrow">Optiv Security · VIT Internship Recruitment 2026 · Case Study 2</div>
+    <h1>PII Sanitization Gateway</h1>
+    <div class="sub">Final project report: privacy-first text analysis and PII detection, so that documents can be used with AI without exposing personal data.</div>
+    <div class="chips" style="margin-top:9mm"><span>[PERSON_1]</span><span>[EMAIL_1]</span><span>[PHONE_1]</span><span>[EMPLOYEE_ID_1]</span></div>
+  </div>
+  <div class="meta">
+    <div><b>Team:</b> [Team Name] · VIT Vellore</div>
+    <div><b>Members:</b> [Member 1] · [Member 2] · [Member 3] · [Member 4]</div>
+    <div><b>Date:</b> 14 October 2026 · <b>Version:</b> 1.0 (final)</div>
+    <div style="margin-top:4mm;font-size:8.6pt;color:#9FB0C6">Everything in this report describes the actual project code. Measured numbers are marked with their source. All example personal data is fictional.</div>
+  </div>
+</section>
+
+<!-- ============================== CONTENTS ============================== -->
+<section class="chapter">
+  <h1>Contents</h1>
+  <div class="toc">
+    <div><span class="n">1</span>Executive summary</div>
+    <div><span class="n">2</span>The actual problem</div>
+    <div><span class="n">3</span>Requirements and success criteria</div>
+    <div><span class="n">4</span>What we built and how it solves the problem</div>
+    <div><span class="n">5</span>System architecture</div>
+    <div><span class="n">6</span>Phase-by-phase processing (with the library used in each phase)</div>
+    <div><span class="n">7</span>PII detection in depth</div>
+    <div><span class="n">8</span>Redaction, verification and the release gate</div>
+    <div><span class="n">9</span>Security and privacy design</div>
+    <div><span class="n">10</span>Technology stack: what, where and why</div>
+    <div><span class="n">11</span>Why this stack and not the alternatives</div>
+    <div><span class="n">12</span>The application (user interface)</div>
+    <div><span class="n">13</span>Testing and evaluation</div>
+    <div><span class="n">14</span>Results against the brief</div>
+    <div><span class="n">15</span>Limitations and known gaps</div>
+    <div><span class="n">16</span>Future work and production roadmap</div>
+    <div><span class="n">17</span>Operating guide</div>
+    <div><span class="n">18</span>Deliverables and file inventory</div>
+    <div><span class="n">A</span>Glossary</div>
+    <div><span class="n">B</span>Anticipated questions and answers</div>
+  </div>
+
+  <h2>How to read this report</h2>
+  <ul>
+    <li><b>In a hurry:</b> read chapter 1 (summary), chapter 4 (what and how) and chapter 14 (results).</li>
+    <li><b>Preparing for the interview:</b> add chapter 2 (the problem), chapter 9 (security), chapter 11 (why this technology) and appendix B (questions).</li>
+    <li><b>Changing the code:</b> chapters 5–8, 10 and 17 describe every module, data structure and command.</li>
+  </ul>
+  <div class="callout">
+    <b class="t">Sources and honesty notes</b>
+    The design and behaviour described here come from the project source code (checked on 14 October 2026). The
+    <b>247 passing tests</b> and the <b>sample test-case results</b> were run in this environment on that date. The
+    <b>evaluation numbers on the three real Cadence files</b> (recall 99.5 %, structure retention 99.8–100 %) come from the
+    team's own evaluation harness, recorded in <code>docs/evaluation.md</code>. Those files are not in this copy of the
+    repository, so those numbers were <b>not re-run</b> for this report. All names, e-mails and IDs used as examples are fictional.
+  </div>
+</section>
+
+<!-- ============================== 1 SUMMARY ============================== -->
+<section class="chapter">
+  <h1><span class="num">1</span>Executive summary</h1>
+  <p class="lead">Cadence, a global financial services firm, wants its employees to use an AI agent to analyse business documents. Its policy, however, forbids personal data (PII) from being processed by AI models. We built the <b>PII Sanitization Gateway</b>: a local application that sits in front of the AI, removes the personal data from a document, proves that it is gone, and only then lets the document through.</p>
+
+  <h2>The solution in one paragraph</h2>
+  <p>The Gateway accepts <b>PDF, DOCX and PPTX</b> files, including <b>scanned PDFs</b> and screenshots inside documents, which it reads with OCR. It extracts every piece of text while remembering exactly where each piece came from (page, slide, table cell, file property). It detects PII with <b>35 rule-and-checksum recognizers</b> plus <b>context-aware name detection</b>, and replaces each value with a <b>typed, consistent placeholder</b> such as <span class="tag">[PERSON_1]</span>. It then <b>re-scans the result with a second, independent checker</b>. Only if that check is clean is the document marked <b class="ok">SAFE</b> and released to downloads or AI analysis. If anything is uncertain (the file can't be read, OCR is missing, PII remains, a component crashes), the document is <b class="bad">BLOCKED</b> and nothing is released. This "fail closed" behaviour is the core security property.</p>
+
+  <h2>Key results</h2>
+  <div class="grid3">
+    <div class="kpi"><div class="v">99.5 %</div><div class="l">PII recall on the 3 Cadence files (1,002 of 1,007 labelled items). Source: team evaluation harness</div></div>
+    <div class="kpi"><div class="v">0</div><div class="l">PII values left in released output, and 0 cases of "SAFE" while PII remained. Source: team evaluation harness</div></div>
+    <div class="kpi"><div class="v">99.8–100 %</div><div class="l">Document structure retained (brief's target: at least 80 %). Source: team evaluation harness</div></div>
+    <div class="kpi"><div class="v">247</div><div class="l">Automated tests passing (3 skipped), all on fake data. Run on 14 Oct 2026</div></div>
+    <div class="kpi"><div class="v">9 / 9</div><div class="l">Fictional sample test cases matching expected output, 2 known gaps documented. Run on 14 Oct 2026</div></div>
+    <div class="kpi"><div class="v">3 + OCR</div><div class="l">Formats supported (PDF, DOCX, PPTX), including scanned pages and screenshots</div></div>
+  </div>
+
+  <h2>What makes it trustworthy</h2>
+  <ul>
+    <li><b>Local by default.</b> Extraction, OCR, detection and the default analysis all run on the user's machine. Raw documents never leave it.</li>
+    <li><b>Defence in depth.</b> Detector → independent safety net → remediation loop → release gate → egress guard before the AI → re-verification of redacted files.</li>
+    <li><b>Explainable.</b> Every finding shows its type, masked value, exact source location, confidence and the method that found it.</li>
+    <li><b>Meaning is kept.</b> <span class="tag">[PERSON_3]</span> approved the exception raised by <span class="tag">[PERSON_7]</span> is still useful to an AI, without identities.</li>
+    <li><b>Honest about limits.</b> SAFE means "two independent scans found no PII", not a mathematical proof. Known gaps are listed (chapter 15).</li>
+  </ul>
+
+  <p class="small muted">Deliverables: the working application, CLI, test suite and evaluation harness, nine sample test cases, the interview deck with speaker notes, the website guide and this report (chapter 18).</p>
+</section>
+
+<!-- ============================== 2 PROBLEM ============================== -->
+<section class="chapter">
+  <h1><span class="num">2</span>The actual problem</h1>
+  <h2>2.1 The business scenario</h2>
+  <p>Cadence is a global financial services firm. Employees use an <b>AI document-analysis agent</b> to summarise and question business documents: risk policies, organisational packs, training guides and process documents. These documents routinely contain <b>personal information</b>: employee names, e-mail addresses, phone numbers, staff IDs, and sometimes government IDs, bank details, dates of birth and home addresses. <b>Company policy prohibits PII from being processed by AI models.</b></p>
+
+  <div class="callout orange"><b class="t">The central question</b>How can Cadence extract useful information from business documents with AI <i>without</i> exposing sensitive personal information to the AI model?</div>
+
+  <h2>2.2 Why simply "banning the AI" or "being careful" does not work</h2>
+  <ul>
+    <li>Banning the tool removes the productivity gain and pushes people towards unsanctioned tools, which is a bigger risk.</li>
+    <li>Asking people to remove PII by hand is slow, inconsistent and error-prone, especially in an 85-page training document or a 35-page scanned policy.</li>
+    <li>A policy written on paper does not stop a document from being pasted into an AI. A <b>technical control</b> in front of the AI enforces the policy automatically.</li>
+  </ul>
+
+  <h2>2.3 Why this is technically hard</h2>
+  <table>
+    <tr><th style="width:28%">Difficulty</th><th>Why it matters</th></tr>
+    <tr><td><b>Many formats</b></td><td>PDF, Word and PowerPoint store text in completely different structures: pages, paragraphs, tables, text boxes, shapes, speaker notes, comments, file properties.</td></tr>
+    <tr><td><b>Scanned documents</b></td><td>A scanned PDF has no text at all, only images. Without OCR, a tool would "see nothing" and could wrongly call the document clean.</td></tr>
+    <tr><td><b>PII hidden in odd places</b></td><td>Names in screenshots, in file "author" properties, in speaker notes, in tiny figure text, or split across table columns.</td></tr>
+    <tr><td><b>Names have no fixed format</b></td><td>E-mails and phone numbers follow patterns. Names don't, and the same person appears as "Naomi K. Osadebe", "N. Osadebe" and "Osadebe".</td></tr>
+    <tr><td><b>OCR noise</b></td><td>OCR damages text: "@" disappears, spaces appear inside e-mails, a phone number gets split across two columns.</td></tr>
+    <tr><td><b>False positives</b></td><td>Policy IDs (<code>GRP-POL-001</code>), case numbers, dates and version numbers look like PII but are not. Over-redaction destroys the document's usefulness.</td></tr>
+    <tr><td><b>False negatives</b></td><td>A single missed value is a leak. The system must be designed so that misses are caught or the document is blocked.</td></tr>
+    <tr><td><b>Keeping meaning</b></td><td>Replacing everything with "[REDACTED]" makes analysis useless. The AI still needs to know who approved what, and where.</td></tr>
+    <tr><td><b>Explainability</b></td><td>Security teams must be able to see what was removed, where, and why, without the audit log itself leaking PII.</td></tr>
+  </table>
+
+  <h2>2.4 Consequences of failure (potential risks, not confirmed incidents)</h2>
+  <ul>
+    <li>Privacy violations and exposure of employee or customer data to a third-party AI service.</li>
+    <li>Regulatory and compliance risk (financial-sector privacy obligations).</li>
+    <li>Loss of trust in AI-assisted work inside the organisation.</li>
+  </ul>
+  <p class="muted small">Note: the Cadence sample pack itself asks that its contents not be uploaded to generative-AI tools. That is the exact situation this Gateway makes safe.</p>
+</section>
+
+<!-- ============================== 3 REQUIREMENTS ============================== -->
+<section class="chapter">
+  <h1><span class="num">3</span>Requirements and success criteria</h1>
+  <p>The Optiv brief (Case Study 2) asked for a solution that meets the following requirements. The right-hand column shows where each is satisfied.</p>
+  <table>
+    <tr><th style="width:44%">Requirement from the brief</th><th>How the project meets it</th></tr>
+    <tr><td>Accept different formats: scanned policy documents, PowerPoint, process documents</td><td>PDF (text and scanned), DOCX, PPTX extractors; Tesseract OCR for scans and embedded images (§6.2)</td></tr>
+    <tr><td>Extract text while preserving structure and surrounding context</td><td>Ordered content blocks with source locations (page, slide, shape, table row/column, notes, properties) (§5.4)</td></tr>
+    <tr><td>Detect and classify PII</td><td>35 structured recognizers plus document-level person detection; each finding has a type, confidence and method (§7)</td></tr>
+    <tr><td>Apply transparent tags to identified entities</td><td>Typed, consistent placeholders <span class="tag">[PERSON_1]</span> <span class="tag">[EMAIL_2]</span> (§8.1)</td></tr>
+    <tr><td>Redact before LLM processing</td><td>The AI layer only accepts SAFE results and re-scans outgoing text (egress guard) (§6.7)</td></tr>
+    <tr><td>Preserve source traceability; explainable results</td><td>Every block and finding carries its location; Findings view shows type, masked value, source, confidence, method</td></tr>
+    <tr><td>Minimise false positives; ensure undetected PII does not pass downstream</td><td>Checksums and label rules, negative tests; independent second scan and fail-closed gate (§7, §8)</td></tr>
+    <tr><td>Workable demonstration (Colab, Jupyter or simple interface)</td><td>Local Streamlit web application plus CLI (§12, §17)</td></tr>
+    <tr><td><b>Target:</b> at least 80 % of document structure retained, with context</td><td>Measured 99.8–100 % (team harness, §13.3)</td></tr>
+    <tr><td><b>Target:</b> nearly 100 % PII detection coverage</td><td>Measured 99.5 % recall with 0 residual PII in output (team harness, §13.3)</td></tr>
+  </table>
+
+  <h2>Assumptions and scope</h2>
+  <ul>
+    <li><b>Detection scope:</b> identifiers that point to a person (names, contact details, government, financial and employee identifiers, labelled dates of birth, addresses, IP addresses). Company names and business identifiers are kept.</li>
+    <li><b>Security-first trade-off:</b> business phone numbers, office addresses and staff IDs are also redacted. Some over-redaction is accepted in return for fewer leaks.</li>
+    <li><b>Deployment model for the case study:</b> a local application on the analyst's machine. A production deployment model is discussed in §16.</li>
+    <li><b>Language:</b> English documents. Identifier formats from the US, UK, EU and India, which were present in the test material.</li>
+  </ul>
+</section>
+
+<!-- ============================== 4 SOLUTION ============================== -->
+<section class="chapter">
+  <h1><span class="num">4</span>What we built and how it solves the problem</h1>
+  <p class="lead">The PII Sanitization Gateway is a <b>privacy checkpoint</b> placed between documents and AI. A document goes in. What comes out is either a verified, sanitized version that is safe for AI, or a clear "BLOCKED" verdict with the reason.</p>
+
+  <h2>4.1 The processing flow</h2>
+  <svg viewBox="0 0 760 250" width="100%" role="img" aria-label="Processing flow">
+    <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#5B6B80"/></marker>
+          <marker id="arG" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#0E7A52"/></marker>
+          <marker id="arR" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#B42318"/></marker></defs>
+    <g font-size="11">
+      <rect x="4" y="20" width="96" height="58" rx="7" fill="#FDF0EE" stroke="#E5A59C"/><text x="52" y="44" text-anchor="middle" font-weight="700" fill="#0B1F3A">Upload</text><text x="52" y="61" text-anchor="middle" fill="#5B6B80" font-size="9.5">PDF·DOCX·PPTX</text>
+      <rect x="128" y="20" width="96" height="58" rx="7" fill="#F3F5F8" stroke="#C9D2DE"/><text x="176" y="44" text-anchor="middle" font-weight="700" fill="#0B1F3A">1 Extract</text><text x="176" y="61" text-anchor="middle" fill="#5B6B80" font-size="9.5">text + OCR</text>
+      <rect x="252" y="20" width="96" height="58" rx="7" fill="#F3F5F8" stroke="#C9D2DE"/><text x="300" y="44" text-anchor="middle" font-weight="700" fill="#0B1F3A">2 Detect</text><text x="300" y="61" text-anchor="middle" fill="#5B6B80" font-size="9.5">rules + names</text>
+      <rect x="376" y="20" width="96" height="58" rx="7" fill="#F3F5F8" stroke="#C9D2DE"/><text x="424" y="44" text-anchor="middle" font-weight="700" fill="#0B1F3A">3 Redact</text><text x="424" y="61" text-anchor="middle" fill="#5B6B80" font-size="9.5">[TYPE_n] tags</text>
+      <rect x="500" y="20" width="96" height="58" rx="7" fill="#F3F5F8" stroke="#C9D2DE"/><text x="548" y="44" text-anchor="middle" font-weight="700" fill="#0B1F3A">4 Verify</text><text x="548" y="61" text-anchor="middle" fill="#5B6B80" font-size="9.5">2nd scan + net</text>
+      <polygon points="676,10 726,49 676,88 626,49" fill="#0B1F3A" stroke="#E2641C" stroke-width="2"/><text x="676" y="46" text-anchor="middle" fill="#fff" font-weight="700" font-size="10">Gate</text><text x="676" y="59" text-anchor="middle" fill="#fff" font-size="8.5">SAFE?</text>
+      <line x1="100" y1="49" x2="126" y2="49" stroke="#5B6B80" stroke-width="1.6" marker-end="url(#ar)"/>
+      <line x1="224" y1="49" x2="250" y2="49" stroke="#5B6B80" stroke-width="1.6" marker-end="url(#ar)"/>
+      <line x1="348" y1="49" x2="374" y2="49" stroke="#5B6B80" stroke-width="1.6" marker-end="url(#ar)"/>
+      <line x1="472" y1="49" x2="498" y2="49" stroke="#5B6B80" stroke-width="1.6" marker-end="url(#ar)"/>
+      <line x1="596" y1="49" x2="624" y2="49" stroke="#5B6B80" stroke-width="1.6" marker-end="url(#ar)"/>
+      <path d="M676 88 L676 130 L560 130 L560 152" fill="none" stroke="#0E7A52" stroke-width="2" marker-end="url(#arG)"/>
+      <text x="612" y="124" fill="#0E7A52" font-weight="700" font-size="10">PASS</text>
+      <path d="M726 49 L748 49 L748 190 L740 190" fill="none" stroke="#B42318" stroke-width="2"/>
+      <path d="M748 190 L724 190" fill="none" stroke="#B42318" stroke-width="2" marker-end="url(#arR)"/>
+      <rect x="380" y="154" width="250" height="78" rx="8" fill="#EEF8F3" stroke="#0E7A52"/>
+      <text x="505" y="176" text-anchor="middle" font-weight="700" fill="#0E7A52">SAFE · released</text>
+      <text x="505" y="194" text-anchor="middle" fill="#1A2433" font-size="9.5">sanitized text · JSON audit report</text>
+      <text x="505" y="209" text-anchor="middle" fill="#1A2433" font-size="9.5">redacted PDF/DOCX/PPTX (verified)</text>
+      <text x="505" y="224" text-anchor="middle" fill="#1A2433" font-size="9.5">AI analysis (after egress re-scan)</text>
+      <rect x="640" y="154" width="84" height="78" rx="8" fill="#FDF0EE" stroke="#B42318"/>
+      <text x="682" y="180" text-anchor="middle" font-weight="700" fill="#B42318">BLOCKED</text>
+      <text x="682" y="198" text-anchor="middle" fill="#1A2433" font-size="9">report only</text>
+      <text x="682" y="212" text-anchor="middle" fill="#1A2433" font-size="9">nothing</text>
+      <text x="682" y="225" text-anchor="middle" fill="#1A2433" font-size="9">released</text>
+      <rect x="4" y="154" width="360" height="78" rx="8" fill="#F3F5F8" stroke="#C9D2DE"/>
+      <text x="16" y="174" font-weight="700" fill="#0B1F3A" font-size="10.5">Runs across every stage</text>
+      <text x="16" y="192" fill="#1A2433" font-size="9.5">• Source traceability on every block and finding</text>
+      <text x="16" y="207" fill="#1A2433" font-size="9.5">• Error handling that never crashes (problems become warnings)</text>
+      <text x="16" y="222" fill="#1A2433" font-size="9.5">• Audit report with masked values and keyed hashes only</text>
+    </g>
+  </svg>
+
+  <h2>4.2 How each part of the problem is solved</h2>
+  <table>
+    <tr><th style="width:30%">Problem</th><th>Our solution</th></tr>
+    <tr><td>PII must not reach the AI</td><td>A <b>release gate</b>: only documents that pass an independent second scan are released, and the AI layer re-checks the text right before sending it.</td></tr>
+    <tr><td>Different file formats</td><td>One extractor per format, all producing the same <code>NormalizedDocument</code> structure, so every later stage works on any format.</td></tr>
+    <tr><td>Scanned pages and screenshots</td><td>Tesseract OCR in parallel. Small figure text is re-read at 600 dpi. If OCR is unavailable, the document is <b>blocked</b>, never passed as empty.</td></tr>
+    <tr><td>Names with no fixed format</td><td>Evidence-based detection (staff ID next to the name, matching e-mail, "approved by", table header "Name", known given names, spaCy NER) and propagation of every spelling.</td></tr>
+    <tr><td>OCR damage</td><td>OCR-tolerant patterns (e-mails with a lost "@", phone numbers split across columns, one-letter OCR errors in known surnames).</td></tr>
+    <tr><td>False positives</td><td>Checksums (Luhn, Verhoeff, IBAN mod-97, SSN rules), "only when labelled" rules for dates and some IDs, business-vocabulary filters, explicit negative tests.</td></tr>
+    <tr><td>Missed PII</td><td>Independent safety-net scan, a remediation loop, and BLOCKED if anything remains.</td></tr>
+    <tr><td>Keeping meaning</td><td>Typed, numbered placeholders that are consistent across the document.</td></tr>
+    <tr><td>Explainability and audit</td><td>Findings with type, masked value, location, confidence and method; a JSON report with no raw PII.</td></tr>
+    <tr><td>Need a demo</td><td>A local web app (sidebar workspace) and a CLI.</td></tr>
+  </table>
+
+  <h2>4.3 A concrete example (fictional data, actual pipeline output)</h2>
+  <div class="grid2">
+    <div class="callout"><b class="t">Input</b><span class="mono">Employee: Rahul Sharma<br>Email: rahul@example.com<br>Phone: 9876543210<br>Employee ID: EMP-1042<br>Request: Access to the finance reporting system.</span></div>
+    <div class="callout green"><b class="t">Output (verified SAFE)</b><span class="mono">Employee: [PERSON_1]<br>Email: [EMAIL_1]<br>Phone: [PHONE_1]<br>Employee ID: [EMPLOYEE_ID_1]<br>Request: Access to the finance reporting system.</span></div>
+  </div>
+  <p>The business request is untouched. The file's "author" property, which also contained the name, gets the <i>same</i> tag <span class="tag">[PERSON_1]</span>, because it is the same person.</p>
+</section>
+
+<!-- ============================== 5 ARCHITECTURE ============================== -->
+<section class="chapter">
+  <h1><span class="num">5</span>System architecture</h1>
+  <h2>5.1 Layers and the trust boundary</h2>
+  <svg viewBox="0 0 760 300" width="100%" role="img" aria-label="Architecture layers">
+    <defs><marker id="a2" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#0B1F3A"/></marker>
+          <marker id="a3" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#0E7A52"/></marker></defs>
+    <rect x="4" y="14" width="636" height="270" rx="10" fill="none" stroke="#0B1F3A" stroke-dasharray="6 4" stroke-width="1.4"/>
+    <rect x="16" y="4" width="250" height="20" rx="10" fill="#0B1F3A"/><text x="141" y="18" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">TRUST BOUNDARY: raw PII never leaves</text>
+    <g font-size="9.6">
+      <g><rect x="16" y="36" width="114" height="236" rx="8" fill="#F3F5F8"/><text x="73" y="54" text-anchor="middle" font-weight="700" fill="#0B1F3A" font-size="10.5">1 Input</text>
+        <rect x="24" y="64" width="98" height="40" rx="5" fill="#FDF0EE" stroke="#E5A59C"/><text x="73" y="81" text-anchor="middle">Upload (Streamlit)</text><text x="73" y="95" text-anchor="middle" fill="#5B6B80">session store</text>
+        <rect x="24" y="112" width="98" height="40" rx="5" fill="#fff" stroke="#0B1F3A"/><text x="73" y="129" text-anchor="middle">File-type check</text><text x="73" y="143" text-anchor="middle" fill="#5B6B80">pdf/docx/pptx</text>
+        <rect x="24" y="160" width="98" height="40" rx="5" fill="#FDF0EE" stroke="#E5A59C"/><text x="73" y="177" text-anchor="middle">Temp file /</text><text x="73" y="191" text-anchor="middle">in-memory bytes</text></g>
+      <g><rect x="140" y="36" width="114" height="236" rx="8" fill="#F3F5F8"/><text x="197" y="54" text-anchor="middle" font-weight="700" fill="#0B1F3A" font-size="10.5">2 Extraction</text>
+        <rect x="148" y="64" width="98" height="40" rx="5" fill="#FDF4E2" stroke="#E0BE77"/><text x="197" y="81" text-anchor="middle">PDF · PyMuPDF</text><text x="197" y="95" text-anchor="middle" fill="#5B6B80">text layer</text>
+        <rect x="148" y="112" width="98" height="40" rx="5" fill="#FDF4E2" stroke="#E0BE77"/><text x="197" y="129" text-anchor="middle">DOCX · python-docx</text><text x="197" y="143" text-anchor="middle" fill="#5B6B80">paras, tables…</text>
+        <rect x="148" y="160" width="98" height="40" rx="5" fill="#FDF4E2" stroke="#E0BE77"/><text x="197" y="177" text-anchor="middle">PPTX · python-pptx</text><text x="197" y="191" text-anchor="middle" fill="#5B6B80">shapes, notes</text>
+        <rect x="148" y="208" width="98" height="40" rx="5" fill="#FDF4E2" stroke="#E0BE77"/><text x="197" y="225" text-anchor="middle">OCR · Tesseract</text><text x="197" y="239" text-anchor="middle" fill="#5B6B80">scans, images</text></g>
+      <g><rect x="264" y="36" width="114" height="236" rx="8" fill="#F3F5F8"/><text x="321" y="54" text-anchor="middle" font-weight="700" fill="#0B1F3A" font-size="10.5">3 Detection</text>
+        <rect x="272" y="64" width="98" height="40" rx="5" fill="#fff" stroke="#0B1F3A"/><text x="321" y="81" text-anchor="middle">35 recognizers</text><text x="321" y="95" text-anchor="middle" fill="#5B6B80">regex + checksums</text>
+        <rect x="272" y="112" width="98" height="40" rx="5" fill="#fff" stroke="#0B1F3A"/><text x="321" y="129" text-anchor="middle">Names · spaCy NER</text><text x="321" y="143" text-anchor="middle" fill="#5B6B80">+ evidence rules</text>
+        <rect x="272" y="160" width="98" height="40" rx="5" fill="#fff" stroke="#0B1F3A"/><text x="321" y="177" text-anchor="middle">Propagation</text><text x="321" y="191" text-anchor="middle" fill="#5B6B80">all spellings</text>
+        <rect x="272" y="208" width="98" height="40" rx="5" fill="#FDF4E2" stroke="#E0BE77"/><text x="321" y="225" text-anchor="middle">Findings</text><text x="321" y="239" text-anchor="middle" fill="#5B6B80">type·conf·source</text></g>
+      <g><rect x="388" y="36" width="114" height="236" rx="8" fill="#F3F5F8"/><text x="445" y="54" text-anchor="middle" font-weight="700" fill="#0B1F3A" font-size="10.5">4 Protection</text>
+        <rect x="396" y="64" width="98" height="40" rx="5" fill="#fff" stroke="#0B1F3A"/><text x="445" y="81" text-anchor="middle">Redactor</text><text x="445" y="95" text-anchor="middle" fill="#5B6B80">[TYPE_n]</text>
+        <rect x="396" y="112" width="98" height="40" rx="5" fill="#fff" stroke="#0B1F3A"/><text x="445" y="129" text-anchor="middle">Second scan</text><text x="445" y="143" text-anchor="middle" fill="#5B6B80">+ safety net</text>
+        <rect x="396" y="160" width="98" height="40" rx="5" fill="#fff" stroke="#B42318" stroke-width="1.6"/><text x="445" y="177" text-anchor="middle" font-weight="700" fill="#B42318">Release gate</text><text x="445" y="191" text-anchor="middle" fill="#5B6B80">SAFE / BLOCKED</text>
+        <rect x="396" y="208" width="98" height="40" rx="5" fill="#fff" stroke="#0B1F3A"/><text x="445" y="225" text-anchor="middle">Fail-closed</text><text x="445" y="239" text-anchor="middle" fill="#5B6B80">handling</text></g>
+      <g><rect x="512" y="36" width="118" height="236" rx="8" fill="#F3F5F8"/><text x="571" y="54" text-anchor="middle" font-weight="700" fill="#0B1F3A" font-size="10.5">5 Output</text>
+        <rect x="520" y="64" width="102" height="40" rx="5" fill="#EEF8F3" stroke="#8FCCAE"/><text x="571" y="81" text-anchor="middle">Sanitized text</text><text x="571" y="95" text-anchor="middle" fill="#5B6B80">+ redacted file</text>
+        <rect x="520" y="112" width="102" height="40" rx="5" fill="#EEF8F3" stroke="#8FCCAE"/><text x="571" y="129" text-anchor="middle">Web UI views</text><text x="571" y="143" text-anchor="middle" fill="#5B6B80">Streamlit</text>
+        <rect x="520" y="160" width="102" height="40" rx="5" fill="#ECEFF3" stroke="#AEB8C6"/><text x="571" y="177" text-anchor="middle">Audit report</text><text x="571" y="191" text-anchor="middle" fill="#5B6B80">masked + hashes</text>
+        <rect x="520" y="208" width="102" height="40" rx="5" fill="#EEF8F3" stroke="#8FCCAE"/><text x="571" y="225" text-anchor="middle">AI layer</text><text x="571" y="239" text-anchor="middle" fill="#5B6B80">egress guard</text></g>
+      <line x1="130" y1="150" x2="139" y2="150" stroke="#0B1F3A" stroke-width="1.6" marker-end="url(#a2)"/>
+      <line x1="254" y1="150" x2="263" y2="150" stroke="#0B1F3A" stroke-width="1.6" marker-end="url(#a2)"/>
+      <line x1="378" y1="150" x2="387" y2="150" stroke="#0B1F3A" stroke-width="1.6" marker-end="url(#a2)"/>
+      <line x1="502" y1="150" x2="511" y2="150" stroke="#0B1F3A" stroke-width="1.6" marker-end="url(#a2)"/>
+      <rect x="660" y="190" width="94" height="70" rx="8" fill="#0B1F3A"/><text x="707" y="220" text-anchor="middle" fill="#fff" font-weight="700" font-size="10.5">Downstream</text><text x="707" y="236" text-anchor="middle" fill="#fff" font-weight="700" font-size="10.5">LLM</text>
+      <path d="M622 228 L658 228" stroke="#0E7A52" stroke-width="2" marker-end="url(#a3)"/>
+      <text x="707" y="276" text-anchor="middle" fill="#0E7A52" font-size="9" font-weight="700">SAFE text only</text>
+    </g>
+  </svg>
+  <p class="small muted">Colour key: red = sensitive input; amber = intermediate text that still contains PII; white = control logic; green = sanitized output; grey = audit metadata.</p>
+
+  <h2>5.2 Repository map</h2>
+  <table>
+    <tr><th style="width:26%">Path</th><th>Role</th></tr>
+    <tr><td><code>app/main.py</code></td><td>Streamlit application: sidebar navigation, document session store, the six views, downloads.</td></tr>
+    <tr><td><code>app/ui.py</code></td><td>Design system: colour tokens (light/dark), styles, animations, HTML components.</td></tr>
+    <tr><td><code>pipeline.py</code></td><td><code>process()</code> runs extract → detect → redact → verify, with an optional per-stage progress callback; also the CLI and the evaluation entry point.</td></tr>
+    <tr><td><code>extraction/</code></td><td><code>pdf_extractor</code>, <code>docx_extractor</code>, <code>pptx_extractor</code>, <code>ocr</code>, <code>figures</code> (small-text regions), <code>images</code> (EMF/WMF via LibreOffice), <code>metadata</code> (file properties).</td></tr>
+    <tr><td><code>detection/</code></td><td><code>patterns.py</code> (35 recognizers), <code>names.py</code> (person detection and propagation), <code>lexicon.py</code> (~700 given names).</td></tr>
+    <tr><td><code>redaction/</code></td><td><code>redactor.py</code>, <code>verifier.py</code> (second scan + safety net), <code>gate.py</code> (SAFE/BLOCKED), <code>output.py</code> (text + report), <code>file_writer.py</code> (redacted files).</td></tr>
+    <tr><td><code>ai_layer/</code></td><td>Guarded analysis: SAFE-only, egress guard, local brief or Claude.</td></tr>
+    <tr><td><code>models/</code>, <code>interfaces/</code></td><td>Shared data structures and interface contracts between modules.</td></tr>
+    <tr><td><code>evaluation/</code>, <code>tests/</code></td><td>Evaluation harness (metrics, ground truth, regex baseline) and the pytest suite.</td></tr>
+    <tr><td><code>sample_test_cases/</code></td><td>Nine fictional test documents, expected outputs and an automatic checker.</td></tr>
+    <tr><td><code>presentation/</code>, <code>docs/</code></td><td>Interview deck, speaker notes, screenshots, this report; technical docs and website guide.</td></tr>
+  </table>
+
+  <h2>5.3 Design principles behind the architecture</h2>
+  <ul>
+    <li><b>One common document model.</b> Every extractor outputs the same structure, so detection and redaction are format-independent.</li>
+    <li><b>Separation of concerns.</b> The UI only displays results. All security logic lives in the pipeline, so the CLI, tests and UI share exactly the same checks.</li>
+    <li><b>Interfaces between modules.</b> Extractor, detector, redactor and verifier are defined as protocols (<code>interfaces/</code>), so any one can be replaced without touching the others. For example, the evaluation harness can plug in a baseline detector.</li>
+    <li><b>Never raise, always explain.</b> Extraction failures become warnings and BLOCKED reasons, never crashes and never silent passes.</li>
+  </ul>
+
+  <h2>5.4 Core data structures</h2>
+<pre><code>ContentBlock        text, source ("table 0 | row 1 | col 2"), block_type, metadata {block_id, location, ...}
+NormalizedDocument  document_id, source_type (pdf|docx|pptx), file_name, content [ContentBlock], metadata {parser, ocr_used, status, warnings}
+PIIFinding          pii_type, value, source, confidence, detection_method, start, end, validated, metadata {block_id, entity_key}
+GateResult          status (SAFE|BLOCKED), reason, document (sanitized copy), redaction, verification, passes
+PipelineResult      file_name, original, findings, gate, timings {extract, detect, redact_verify}, summary()</code></pre>
+  <p>Source strings are human-readable on purpose: <code>page 3</code>, <code>slide 2 | shape Table 2 | row 1 | col 1</code>, <code>slide notes | slide 1 | paragraph 0</code>, <code>metadata | field author</code>, <code>paragraph | index 2 | image image1.png | image OCR</code>.</p>
+</section>
+
+<!-- ============================== 6 PHASES ============================== -->
+<section class="chapter">
+  <h1><span class="num">6</span>Phase-by-phase processing</h1>
+  <p>This chapter follows one document through the system and names the exact library used in each phase, and why.</p>
+
+  <h2>6.1 Phase 0: Upload and session handling</h2>
+  <ul>
+    <li><b>Streamlit <code>file_uploader</code></b> accepts one or more PDF/DOCX/PPTX files (up to 200 MB each).</li>
+    <li>The file bytes are hashed with <b>SHA-256</b> (Python <code>hashlib</code>). The first 16 hex characters identify the document, so re-uploading the same content does not re-process it.</li>
+    <li>The document and its result are kept in <b>Streamlit session state</b> (in memory, for this browser session only). Nothing is written to a database. Switching views never re-runs the pipeline.</li>
+    <li>For processing, the bytes are written to a temporary file (<code>tempfile</code>) that is deleted immediately afterwards.</li>
+  </ul>
+
+  <h2>6.2 Phase 1: Extraction (<code>extraction/</code>)</h2>
+  <table>
+    <tr><th style="width:15%">Format</th><th style="width:25%">Library</th><th>What is extracted and how</th></tr>
+    <tr><td><b>PDF</b></td><td>PyMuPDF (<code>pymupdf</code> 1.28)</td><td>Native text layer with positions. Pages with no text layer are rendered to images and sent to OCR. Low-confidence or small-text regions (figures, screenshots) are found and re-read at <b>600 dpi</b>. Document properties are read too.</td></tr>
+    <tr><td><b>DOCX</b></td><td>python-docx 1.2 (+ lxml)</td><td>Body paragraphs, tables (row/column kept), headers/footers, <b>text boxes</b>, footnotes, endnotes, comments, file properties, and <b>embedded screenshots</b> (sent to OCR).</td></tr>
+    <tr><td><b>PPTX</b></td><td>python-pptx 1.0</td><td>Every shape including groups and tables, speaker notes, pictures (OCR), file properties.</td></tr>
+    <tr><td><b>Images / scans</b></td><td>Tesseract 5.5 via pytesseract 0.3; Pillow 12</td><td>Pillow converts to greyscale and auto-contrasts, then Tesseract OCR returns paragraphs with word boxes and confidence. Pages are OCR'd <b>in parallel</b> (a <code>ThreadPoolExecutor</code> drives separate Tesseract processes, up to 8; <code>OMP_THREAD_LIMIT=1</code> prevents CPU oversubscription).</td></tr>
+    <tr><td><b>EMF/WMF</b></td><td>LibreOffice (optional)</td><td>Vector pictures inside Office files are converted to raster for OCR when LibreOffice is installed. Otherwise they are listed in warnings for manual review.</td></tr>
+  </table>
+  <p><b>Output:</b> a <code>NormalizedDocument</code> of ordered blocks, each with its source. <b>Never raises:</b> a corrupt or unsupported file produces an <code>ERROR</code> warning, which later makes the gate block the document.</p>
+
+  <h2>6.3 Phase 2: Detection (<code>detection/</code>)</h2>
+  <ul>
+    <li><b>Structured recognizers</b> (Python <code>re</code> plus hand-written validators): 35 patterns for e-mail, phone, SSN, PAN, Aadhaar, passport, card, IBAN, bank account, DOB, address, IP, employee ID and more (detail in §7).</li>
+    <li><b>Person names</b> with <b>spaCy 3.8</b> and the <code>en_core_web_sm</code> model for named-entity recognition, combined with rule-based evidence (context cues, e-mail corroboration, table headers, a given-name lexicon) and document-wide propagation.</li>
+    <li><b>Output:</b> a list of <code>PIIFinding</code>s with type, value, location, confidence, method and an <code>entity_key</code> linking spellings of the same person.</li>
+  </ul>
+
+  <h2>6.4 Phase 3: Redaction (<code>redaction/redactor.py</code>, pure Python)</h2>
+  <ul>
+    <li>Works on a <b>deep copy</b> of the document and replaces exact character spans <b>right to left</b>, so offsets stay valid.</li>
+    <li>A finding is redacted if it is <b>validated</b> (checksum or label) or its confidence is <b>≥ 0.5</b>. Lower-confidence candidates are not dropped silently: they are listed as <b>needs review</b>.</li>
+    <li>Overlapping findings are merged and the longest one names the tag. Placeholders are numbered in document order.</li>
+  </ul>
+
+  <h2>6.5 Phase 4: Verification and gate (<code>verifier.py</code>, <code>gate.py</code>)</h2>
+  <ul>
+    <li>The sanitized copy is scanned again by the <b>same detector</b> and by an <b>independent regex safety net</b>.</li>
+    <li>Anything found is redacted and the document is scanned again (at most 2 scans in total). If PII is still present, the result is <b class="bad">BLOCKED (residual_pii)</b>.</li>
+    <li>Before verification, extraction problems are checked: errors, unread scanned pages and empty content all block the document.</li>
+  </ul>
+
+  <h2>6.6 Phase 5: Release and outputs (<code>output.py</code>, <code>file_writer.py</code>)</h2>
+  <ul>
+    <li><b>Sanitized text</b> (SAFE only): every block with its source label.</li>
+    <li><b>JSON audit report</b> (always): status, reason, counts, masked values (<code>Ra********ma</code>) and per-run keyed hashes. <b>No raw PII.</b></li>
+    <li><b>Redacted original-format file</b> (optional, SAFE only):
+      <ul>
+        <li><b>PDF</b>: PyMuPDF redaction annotations are placed on the OCR word boxes, then <code>apply_redactions</code> <b>destroys the underlying pixels and text</b>. Figures that contained PII are removed, metadata is rewritten, and the result is re-OCR'd at 400 dpi until clean.</li>
+        <li><b>DOCX/PPTX</b>: the file is opened as a ZIP (<code>zipfile</code>) and every XML part is rewritten with <b>lxml</b>: body, tables, headers, footers, text boxes, notes, comments, properties, hyperlinks. Screenshots that contained PII are replaced with a neutral image (Pillow).</li>
+        <li>The written file is verified. If it cannot be verified, it is not kept.</li>
+      </ul></li>
+  </ul>
+
+  <h2>6.7 Phase 6: AI analysis (<code>ai_layer/</code>)</h2>
+  <ul>
+    <li><b>Only SAFE results are accepted.</b> Anything else raises <code>AnalysisBlocked</code>.</li>
+    <li><b>Egress guard:</b> right before sending, the outgoing text is scanned once more with the safety net. Any hit cancels the call.</li>
+    <li><b>Local provider (default):</b> an offline brief built in Python: summary, headings, "must/shall" obligations, key terms, PII counts, and passage retrieval for a question.</li>
+    <li><b>Claude provider (optional):</b> only if <code>ANTHROPIC_API_KEY</code> is set. It calls the Anthropic Messages API with Python's standard <code>urllib</code>, sending sanitized text only, with a system prompt telling the model never to re-identify anyone.</li>
+  </ul>
+
+  <h2>6.8 Phase 7: Presentation (<code>app/</code>)</h2>
+  <ul>
+    <li><b>Streamlit 1.65</b> renders the app. <b>pandas 3.0</b> builds the findings tables. Custom HTML/CSS/JavaScript (in <code>ui.py</code>) provides the design, animations and light/dark theming.</li>
+    <li>While a document is processed, a live status panel reports each stage <b>only after it has actually finished</b>, using a progress callback added to <code>pipeline.process()</code>.</li>
+  </ul>
+
+  <h2>6.9 Phase 8: Quality assurance</h2>
+  <ul>
+    <li><b>pytest 9</b> runs 247 unit and end-to-end tests on fake documents generated on the fly.</li>
+    <li>The <b>evaluation harness</b> measures recall, precision, residual PII, traceability and structure retention against labelled ground truth, and flags regressions.</li>
+  </ul>
+</section>
+
+<!-- ============================== 7 DETECTION ============================== -->
+<section class="chapter">
+  <h1><span class="num">7</span>PII detection in depth</h1>
+  <h2>7.1 Structured recognizers (35 rules)</h2>
+  <table>
+    <tr><th style="width:24%">Type</th><th>Rule (precision comes from validation or labels)</th></tr>
+    <tr><td>EMAIL</td><td>Standard addresses plus OCR-damaged forms (space around "@", lost "@" with a known domain, truncated domain).</td></tr>
+    <tr><td>PHONE</td><td>International <code>+CC</code>, North-American, labelled ("Tel:", "Mobile"), and fragments split across table columns by OCR (never swallowing a neighbouring date).</td></tr>
+    <tr><td>SSN</td><td><code>ddd-dd-dddd</code> with US Social Security validity rules; labelled variants; "SSN ending 4821".</td></tr>
+    <tr><td>PAN · AADHAAR · NATIONAL_ID · PASSPORT</td><td>Indian PAN (entity-type letter check), Aadhaar (<b>Verhoeff checksum</b>), UK NINO, PESEL/TIN when labelled, passport when labelled.</td></tr>
+    <tr><td>CREDIT_CARD · IBAN · BANK_ACCOUNT</td><td>Cards with the <b>Luhn checksum</b>; IBAN with <b>mod-97</b>; labelled account numbers; "card ending 4421".</td></tr>
+    <tr><td>DOB</td><td>Only when labelled ("DOB", "date of birth", "born"). Ordinary business dates are never PII.</td></tr>
+    <tr><td>ADDRESS</td><td>Street number + name + suffix (+ unit, city, state, ZIP); "City, ST 12345"; UK postcode; labelled Indian PIN.</td></tr>
+    <tr><td>IP_ADDRESS</td><td>IPv4 with valid octets (section numbers like 1.2.3.4 are excluded).</td></tr>
+    <tr><td>EMPLOYEE_ID</td><td><code>EMP-41077</code>, contractor and director prefixes (<code>MER-IN-4471</code>, <code>DIR-0058</code>, <code>CTR-</code>, <code>STF-</code>), labelled staff/badge IDs, OCR splits.</td></tr>
+  </table>
+  <p><b>Deliberately not matched:</b> business identifiers such as <code>GRP-POL-001</code>, <code>ISS-2026-0112</code>, <code>RSK-4488</code>, <code>CTL-IAM-04</code>. These are pinned by tests, so a future change cannot start redacting them.</p>
+
+  <h2>7.2 Person names: evidence, not guessing</h2>
+  <table>
+    <tr><th style="width:40%">Evidence</th><th style="width:38%">Example (fictional)</th><th>Confidence</th></tr>
+    <tr><td>Staff ID right after the name</td><td>Naomi K. Osadebe (EMP-41077)</td><td>0.95</td></tr>
+    <tr><td>Matching e-mail anywhere in the file</td><td>Marguerite Vossberg + m.vossberg@…</td><td>0.90</td></tr>
+    <tr><td>Document property (author, last modified by)</td><td>author: Jane Example</td><td>0.90</td></tr>
+    <tr><td>Context cue before</td><td>"approved by …", "Owner: …", "Dear …"</td><td>0.85</td></tr>
+    <tr><td>Table column or row label</td><td>column "Name", "Owner", "USERS"</td><td>0.85</td></tr>
+    <tr><td>Title + surname</td><td>Ms Prieto-Ramos</td><td>0.85</td></tr>
+    <tr><td>Role right after</td><td>…, Chief Risk Officer</td><td>0.80</td></tr>
+    <tr><td>Known given name + surname</td><td>Amanda Singh (lexicon of ~700 names)</td><td>0.75</td></tr>
+    <tr><td>spaCy NER alone</td><td>Sneha M. Vaidyanathan</td><td>0.60</td></tr>
+  </table>
+  <ul>
+    <li><b>Cleaning:</b> OCR'd tables glue neighbouring cells onto names. These are trimmed, e.g. "High Yusuf O. Balogun" becomes "Yusuf O. Balogun".</li>
+    <li><b>Rejection:</b> business vocabulary ("Risk Owner", "Trigger Type"), all-caps role lines, names followed by a company suffix ("… Ltd"), and words the same document also uses in lower case.</li>
+    <li><b>Propagation:</b> once a person is confirmed, every form is found everywhere: full name, initials, "Surname, First", upper case, a distinctive bare surname, and OCR variants one letter away. All share one <code>entity_key</code>, and therefore <b>one placeholder</b>.</li>
+    <li><b>Safety rule:</b> NER alone never creates a name from screenshot OCR, which is too noisy. Other evidence still applies there.</li>
+  </ul>
+
+  <h2>7.3 Why a hybrid approach (rules + NER + context)</h2>
+  <p>Regular expressions are precise and explainable for values with a fixed shape, especially when backed by checksums, but they cannot find names. A statistical NER model finds names but makes mistakes and gives no checksum-like guarantee. Document-level evidence (the same person's e-mail on another slide, a "Name" column header) is what makes name detection reliable on real business documents. Combining all three, and then <b>verifying independently</b>, gives both high recall and explainability.</p>
+</section>
+
+<!-- ============================== 8 GATE ============================== -->
+<section class="chapter">
+  <h1><span class="num">8</span>Redaction, verification and the release gate</h1>
+  <h2>8.1 Typed, consistent placeholders</h2>
+  <p><span class="tag">Jane Smith</span> emailed <span class="tag">John Doe</span> becomes <span class="tag">[PERSON_1]</span> emailed <span class="tag">[PERSON_2]</span>. The same value, or the same person under a different spelling, always gets the same tag across the whole document. An AI can still reason about relationships ("who approved what") without learning who anyone is. A generic "[REDACTED]" would destroy that meaning.</p>
+
+  <h2>8.2 The gate decision</h2>
+  <table>
+    <tr><th style="width:14%">Status</th><th style="width:28%">Reason</th><th>When it happens</th></tr>
+    <tr><td class="ok">SAFE</td><td><code>verified_clean</code></td><td>The first re-scan found nothing.</td></tr>
+    <tr><td class="ok">SAFE</td><td><code>verified_after_remediation</code></td><td>Residuals were found, redacted, and the next scan was clean.</td></tr>
+    <tr><td class="bad">BLOCKED</td><td><code>extraction_failed</code></td><td>The file could not be opened or parsed (corrupt, protected, wrong type).</td></tr>
+    <tr><td class="bad">BLOCKED</td><td><code>incomplete_extraction</code></td><td>Part of the content was never read (e.g. a scanned page while OCR is missing).</td></tr>
+    <tr><td class="bad">BLOCKED</td><td><code>no_content</code></td><td>Nothing was extracted, so nothing could be verified.</td></tr>
+    <tr><td class="bad">BLOCKED</td><td><code>residual_pii</code></td><td>PII was still present after the last allowed pass.</td></tr>
+    <tr><td class="bad">BLOCKED</td><td><code>verification_error</code></td><td>The detector crashed. Only the exception type is recorded.</td></tr>
+  </table>
+
+  <div class="callout red"><b class="t">Why "fail closed"?</b>A blocked document costs a few minutes of manual review. A leaked document cannot be un-sent. When the system cannot prove a document is clean, it treats it as unsafe, so "nothing was read" is never mistaken for "nothing was found".</div>
+
+  <h2>8.3 The independent safety net</h2>
+  <p>The safety net (<code>redaction/verifier.py</code>) is a separate, conservative set of checks: e-mail, phone, SSN, card (Luhn), IBAN (mod-97), PAN, passport after the word "passport", labelled DOB, street addresses and IPv4. Because it is implemented separately from the main detector, a bug or blind spot in one is unlikely to be repeated in the other. It is used in verification, at AI egress and when verifying written redacted files.</p>
+
+  <h2>8.4 Audit without a second copy of the PII</h2>
+  <p>Reports and logs record what happened (type, count, location, method, confidence, gate status and reason) and identify values only by <b>masked forms</b> and <b>keyed hashes</b>. The hash key is random per run, so short values such as phone numbers cannot be reversed with a lookup table.</p>
+</section>
+
+<!-- ============================== 9 SECURITY ============================== -->
+<section class="chapter">
+  <h1><span class="num">9</span>Security and privacy design</h1>
+  <h2>9.1 Threats and controls</h2>
+  <table>
+    <tr><th style="width:34%">Threat</th><th>Control in this project</th></tr>
+    <tr><td>Raw PII sent to an AI model</td><td>Release gate; AI layer accepts SAFE only; egress guard re-scans the outgoing text.</td></tr>
+    <tr><td>Scanned page silently skipped</td><td>Missing OCR or OCR failure → <code>incomplete_extraction</code> → BLOCKED.</td></tr>
+    <tr><td>Detector misses a value</td><td>Independent safety net; remediation loop; BLOCKED if anything remains.</td></tr>
+    <tr><td>Component crash leads to a partial result</td><td>Any exception in verification → <code>verification_error</code> → BLOCKED.</td></tr>
+    <tr><td>Redacted PDF still contains hidden text or pixels</td><td>True redaction (<code>apply_redactions</code> destroys pixels and text), figure removal, 400 dpi OCR re-check.</td></tr>
+    <tr><td>Audit log becomes a PII store</td><td>Masked values and per-run keyed hashes only.</td></tr>
+    <tr><td>Malicious content in a document rendered in the UI</td><td>All document-derived text is HTML-escaped before display.</td></tr>
+    <tr><td>Accidental display of raw PII on screen</td><td>Original text is hidden in Compare unless the user enables it in settings; masked values everywhere else.</td></tr>
+    <tr><td>Data persisted on disk or in a database</td><td>No database. Session-only memory; temporary files are deleted after processing.</td></tr>
+    <tr><td>Third-party services seeing the document</td><td>All processing is local; no cloud OCR/NER; no web fonts or CDNs in the UI.</td></tr>
+  </table>
+
+  <h2>9.2 Security principles</h2>
+  <ul>
+    <li><b>Local by default:</b> the only possible outbound call is the optional Claude analysis, and it carries sanitized text of SAFE documents only.</li>
+    <li><b>Fail closed:</b> uncertainty is treated as unsafe.</li>
+    <li><b>Defence in depth:</b> several independent controls, so one failure is not a leak.</li>
+    <li><b>Least data:</b> keep only what is needed, for as long as needed (the browser session).</li>
+    <li><b>Explainability:</b> every decision can be traced and justified.</li>
+  </ul>
+
+  <h2>9.3 What "SAFE" does and does not mean</h2>
+  <div class="callout">SAFE means that <b>two independent scans found no PII within the detection scope</b>. It is not a mathematical guarantee. Content the system cannot read (handwriting, vector pictures without LibreOffice) is reported in warnings for manual review, and OCR quality limits recall on heavily degraded scans. This is why the system is designed as one layer in a governance process, with human review for uncertain cases.</div>
+</section>
+
+<!-- ============================== 10 STACK ============================== -->
+<section class="chapter">
+  <h1><span class="num">10</span>Technology stack: what, where and why</h1>
+  <table>
+    <tr><th style="width:18%">Technology</th><th style="width:10%">Version</th><th style="width:18%">Phase</th><th>Purpose and reason</th></tr>
+    <tr><td><b>Python</b></td><td>3.10+ (3.14 used)</td><td>All</td><td>The strongest ecosystem for document parsing, OCR and NLP; one language for pipeline, UI and tests.</td></tr>
+    <tr><td><b>PyMuPDF</b></td><td>1.28.2</td><td>Extraction, redacted PDF</td><td>Fast PDF text with positions, page rendering for OCR, and true redaction (<code>apply_redactions</code>).</td></tr>
+    <tr><td><b>python-docx</b></td><td>1.2.0</td><td>Extraction</td><td>Native Word structure: paragraphs, tables, headers, properties.</td></tr>
+    <tr><td><b>python-pptx</b></td><td>1.0.2</td><td>Extraction</td><td>Native PowerPoint structure: shapes, groups, tables, notes.</td></tr>
+    <tr><td><b>lxml</b> + <b>zipfile</b></td><td>6.1.3 / stdlib</td><td>Extraction, redacted DOCX/PPTX</td><td>Direct XML access to every part of Office files (text boxes, comments, notes, hyperlinks) that the high-level libraries do not expose.</td></tr>
+    <tr><td><b>Tesseract</b> + <b>pytesseract</b></td><td>5.5.2 / 0.3.13</td><td>OCR</td><td>Free, mature, fully local OCR with word boxes and confidence.</td></tr>
+    <tr><td><b>Pillow</b></td><td>12.3.0</td><td>OCR pre-processing, image replacement</td><td>Greyscale and auto-contrast before OCR; neutral replacement images.</td></tr>
+    <tr><td><b>LibreOffice</b></td><td>optional</td><td>Extraction</td><td>Converts EMF/WMF vector pictures so they can be OCR'd.</td></tr>
+    <tr><td><b>spaCy</b> + <b>en_core_web_sm</b></td><td>3.8.16 / 3.8.0</td><td>Detection (names)</td><td>Fast CPU named-entity recognition that runs locally and deterministically; the model is swappable (<code>en_core_web_lg</code>).</td></tr>
+    <tr><td><b>re</b>, <b>hashlib</b>, <b>hmac</b> (stdlib)</td><td>—</td><td>Detection, audit, session ids</td><td>Patterns and validators; SHA-256 ids; keyed hashes in reports.</td></tr>
+    <tr><td><b>Streamlit</b></td><td>1.65.0</td><td>User interface</td><td>Interactive web app in pure Python with uploads, session state and downloads; runs locally.</td></tr>
+    <tr><td><b>pandas</b></td><td>3.0.6</td><td>User interface</td><td>Tabular findings and residuals for the data tables.</td></tr>
+    <tr><td><b>HTML/CSS/JS</b> (inline)</td><td>—</td><td>User interface</td><td>Custom design, light/dark tokens, animations; no external fonts or CDNs.</td></tr>
+    <tr><td><b>urllib</b> (stdlib)</td><td>—</td><td>AI layer (optional)</td><td>Calls the Anthropic Messages API without adding an SDK dependency.</td></tr>
+    <tr><td><b>pytest</b></td><td>9.1.1</td><td>Testing</td><td>Unit and end-to-end tests on generated fake documents.</td></tr>
+  </table>
+</section>
+
+<!-- ============================== 11 ALTERNATIVES ============================== -->
+<section class="chapter">
+  <h1><span class="num">11</span>Why this stack and not the alternatives</h1>
+  <p>The single most important constraint is the problem itself: <b>we may not send raw personal data to a third party</b>. Any tool that needs the raw document to leave the machine before redaction is ruled out, however good it is. The second constraint is <b>explainability and testability</b>: a security team must understand and reproduce every decision.</p>
+
+  <h2>11.1 OCR</h2>
+  <table>
+    <tr><th style="width:26%">Option</th><th>Why not chosen (or chosen)</th></tr>
+    <tr><td class="ok">Tesseract (chosen)</td><td>Free, local, mature, good on typed business documents, gives word boxes for true PDF redaction.</td></tr>
+    <tr><td>AWS Textract, Google Vision, Azure Document Intelligence</td><td>Excellent accuracy, but the raw scanned page with all its PII would be uploaded to a cloud service before any redaction, which defeats the purpose. They also add cost and an internet dependency.</td></tr>
+    <tr><td>EasyOCR, PaddleOCR</td><td>Deep-learning OCR needs PyTorch/Paddle (large installs, GPU for good speed); on a CPU laptop it is slower for 35-page scans and harder to install for a demo.</td></tr>
+  </table>
+
+  <h2>11.2 PII / name detection</h2>
+  <table>
+    <tr><th style="width:26%">Option</th><th>Why not chosen (or chosen)</th></tr>
+    <tr><td class="ok">Rules + checksums + spaCy + document evidence (chosen)</td><td>Local, fast, deterministic, explainable per finding; tuned for OCR noise, tables and document-wide name propagation.</td></tr>
+    <tr><td>Microsoft Presidio</td><td>A good open-source framework built on the same idea (regex + spaCy). We needed document-level logic that Presidio does not do out of the box (cross-slide e-mail corroboration, table-header evidence, one placeholder per person across spellings, OCR-split phone fragments), plus tight integration with source locations. A custom detector gave that control without an extra framework.</td></tr>
+    <tr><td>Transformer NER (BERT, RoBERTa)</td><td>Often more accurate on names, but needs much larger models, slower CPU inference or a GPU, and is harder to explain. A good future upgrade behind the same interface (§16).</td></tr>
+    <tr><td>Using an LLM to find PII</td><td>Sending the raw text to a hosted LLM to find PII would itself break the policy. A local LLM would be heavy, slow and non-deterministic, which is hard to test and audit.</td></tr>
+    <tr><td>Cloud DLP (Google Cloud DLP, AWS Macie/Comprehend, Azure Purview)</td><td>Strong products, but they need the raw data in the cloud, add cost and vendor lock-in, and are not available offline. In an enterprise they could complement this tool as a second opinion.</td></tr>
+    <tr><td>Regex only</td><td>Cannot find names and produces false positives on numbers without context.</td></tr>
+  </table>
+
+  <h2>11.3 Document parsing</h2>
+  <table>
+    <tr><th style="width:26%">Option</th><th>Why not chosen (or chosen)</th></tr>
+    <tr><td class="ok">PyMuPDF (chosen)</td><td>Fast, gives text positions, renders pages for OCR, and is one of the few Python libraries that performs <b>true</b> redaction (removing underlying text and pixels).</td></tr>
+    <tr><td>pdfplumber / pdfminer.six / PyPDF2</td><td>Good for text and tables, but no page rendering for OCR and no true redaction, so a second library would still be needed.</td></tr>
+    <tr><td class="ok">python-docx / python-pptx + lxml (chosen)</td><td>Keep native structure (tables, shapes, notes, properties) for traceability; lxml covers parts the libraries don't expose.</td></tr>
+    <tr><td>Convert Office → PDF first (LibreOffice)</td><td>Loses structure (which slide, shape, table cell, speaker note, property), hurting traceability; heavy dependency; only used optionally for EMF/WMF pictures.</td></tr>
+    <tr><td>Apache Tika</td><td>Broad format support but needs a Java server and returns flattened text without precise locations.</td></tr>
+  </table>
+
+  <h2>11.4 Application and interface</h2>
+  <table>
+    <tr><th style="width:26%">Option</th><th>Why not chosen (or chosen)</th></tr>
+    <tr><td class="ok">Streamlit (chosen)</td><td>Full interactive web app in pure Python (uploads, tables, downloads, session state), quick to build and easy to demo locally; the brief explicitly allowed a "simple custom interface".</td></tr>
+    <tr><td>Google Colab</td><td>Allowed by the brief, but documents would be uploaded to Google's cloud runtime. That is not acceptable for real PII, and it is not a usable tool for analysts.</td></tr>
+    <tr><td>Jupyter Notebook</td><td>Good for exploration, but not an application a business user can operate; harder to enforce the release flow.</td></tr>
+    <tr><td>React/Angular + FastAPI/Flask/Django</td><td>A production-grade option, but two codebases, an API layer and much more time for a case study. The pipeline is already separated from the UI, so this migration is possible later (§16).</td></tr>
+    <tr><td>Gradio</td><td>Similar to Streamlit, aimed at model demos, with less control over multi-view workspace layouts.</td></tr>
+    <tr><td>Desktop app (PyQt, Electron)</td><td>Packaging and distribution overhead; a browser UI on localhost gives the same "local only" property more simply.</td></tr>
+  </table>
+
+  <h2>11.5 Other choices</h2>
+  <ul>
+    <li><b>No database:</b> storing documents or results would create a new store of PII. Session memory is enough for the use case.</li>
+    <li><b>No Anthropic SDK:</b> the AI layer is optional and small; the standard library avoids another dependency.</li>
+    <li><b>Python rather than Java/Node:</b> spaCy, PyMuPDF, python-docx/pptx and pytesseract have no equally mature equivalents in a single other ecosystem.</li>
+    <li><b>Single-script navigation rather than Streamlit multipage:</b> Streamlit's file uploader cannot keep files across pages, so one script with a sidebar view selector and a session document store keeps uploads and results while switching views.</li>
+  </ul>
+</section>
+
+<!-- ============================== 12 UI ============================== -->
+<section class="chapter">
+  <h1><span class="num">12</span>The application (user interface)</h1>
+  <p>The app runs at <code>http://localhost:8501</code>. A <b>left sidebar</b> holds the navigation, the active-document picker and a collapsible <b>System &amp; settings</b> panel. The main area shows the selected view.</p>
+  <figure><img src="img/01_workspace_landing.png" alt="Workspace landing"><figcaption>Figure 1. Workspace before upload: hero, PII-type ticker and the document uploader, with the sidebar navigation on the left.</figcaption></figure>
+
+  <h2>12.1 Sidebar</h2>
+  <ul>
+    <li><b>Brand:</b> "PII Gateway — Secure document processing".</li>
+    <li><b>Navigation:</b> Workspace · Findings · Sanitized Text · Compare · AI Analysis · Reports &amp; Downloads, with an orange active marker. It is keyboard-accessible (Tab, then arrow keys).</li>
+    <li><b>Active document:</b> appears after upload; chooses which processed document the detail views show.</li>
+    <li><b>System &amp; settings:</b> OCR, name model, recognizers and AI-provider status, plus two options: "Create redacted PDF/DOCX/PPTX during processing" and "Show original text in Compare" (off by default for privacy).</li>
+  </ul>
+
+  <h2>12.2 Views</h2>
+  <table>
+    <tr><th style="width:20%">View</th><th>What it shows</th></tr>
+    <tr><td><b>Workspace</b></td><td>Upload; live processing status; the session document list (Inspect / Remove / Clear all); for the selected document: result card with the SAFE/BLOCKED verdict (and a suggested action if blocked), the five-stage tracker with real per-stage numbers, six metrics, warnings, and next-step buttons. Before upload: "How it works", key facts and design principles.</td></tr>
+    <tr><td><b>Findings</b></td><td>Counts by type and a table with type, masked value, source, confidence, method and validated flag; "needs review" candidates and residual findings when present. Available for BLOCKED documents as a diagnostic view.</td></tr>
+    <tr><td><b>Sanitized Text</b></td><td>The releasable text block by block, with source labels and coloured placeholders (hovering a tag highlights every occurrence); .txt download. Locked for BLOCKED documents.</td></tr>
+    <tr><td><b>Compare</b></td><td>Before/after for each changed block. The original stays hidden unless enabled in settings. Locked for BLOCKED documents.</td></tr>
+    <tr><td><b>AI Analysis</b></td><td>Optional question; runs the guarded analysis on sanitized text; result kept while you navigate. Locked for BLOCKED documents.</td></tr>
+    <tr><td><b>Reports &amp; Downloads</b></td><td>Sanitized text (.txt), audit report (.json), and the redacted original-format file (generate on demand, verified). Only outputs the result permits are offered; the full JSON report is viewable.</td></tr>
+  </table>
+
+  <div class="grid2">
+    <figure><img src="img/03_workspace_safe.png" alt="SAFE result"><figcaption>Figure 2. SAFE result: verdict, five-stage tracker and metrics from the real pipeline.</figcaption></figure>
+    <figure><img src="img/09_workspace_blocked.png" alt="BLOCKED result"><figcaption>Figure 3. BLOCKED result for a corrupted file, with the suggested action and locked stages.</figcaption></figure>
+    <figure><img src="img/04_findings.png" alt="Findings"><figcaption>Figure 4. Findings: counts by type and masked findings with source, confidence and method.</figcaption></figure>
+    <figure><img src="img/05_sanitized.png" alt="Sanitized text"><figcaption>Figure 5. Sanitized text with source labels and typed placeholders.</figcaption></figure>
+    <figure><img src="img/06_compare.png" alt="Compare"><figcaption>Figure 6. Compare: the original stays hidden by default.</figcaption></figure>
+    <figure><img src="img/08_reports.png" alt="Reports"><figcaption>Figure 7. Reports &amp; Downloads: only permitted outputs are offered.</figcaption></figure>
+  </div>
+
+  <h2>12.3 Visual design</h2>
+  <ul>
+    <li><b>Identity:</b> navy, off-white and Optiv-style orange; glass cards; colour-coded placeholder tags by type.</li>
+    <li><b>Themes:</b> light by default and a matching dark theme, switched from Streamlit's ⋮ menu. A small script detects the active theme and switches the design tokens.</li>
+    <li><b>Motion:</b> particle-network background, hero scan animation, scroll-linked reveals, count-up metrics, animated pipeline tracker, smooth scrolling. All motion is disabled automatically for users who request reduced motion.</li>
+    <li><b>Engineering notes:</b> Streamlit's HTML sanitizer strips <code>&lt;style&gt;</code> and <code>&lt;svg&gt;</code>, so CSS is installed by a script and icons are CSS masks. Every document-derived string is HTML-escaped.</li>
+  </ul>
+  <figure><img src="img/10_dark.png" alt="Dark theme"><figcaption>Figure 8. The same workspace in the dark theme.</figcaption></figure>
+</section>
+
+<!-- ============================== 13 TESTING ============================== -->
+<section class="chapter">
+  <h1><span class="num">13</span>Testing and evaluation</h1>
+  <h2>13.1 Automated tests (run on 14 October 2026)</h2>
+  <p><b>Result: 247 passed, 3 skipped.</b> All tests use fake data generated on the fly. Coverage includes:</p>
+  <ul>
+    <li><b>Extraction:</b> scanned PDF uses OCR; DOCX screenshot is OCR'd; corrupt and unsupported files don't crash.</li>
+    <li><b>Detection:</b> hard negatives (policy and case IDs, dates, versions), overlaps keep the longest span, phone fragments split across table cells, names glued to table columns are trimmed, table headers mark names.</li>
+    <li><b>Redaction:</b> same value gets the same placeholder across blocks, multiple findings keep offsets valid, overlaps merge, source metadata is preserved, values split by line breaks.</li>
+    <li><b>Gate:</b> residual PII blocks; failed extraction, empty documents and scanned pages without OCR block; a detector crash fails closed.</li>
+    <li><b>AI layer:</b> a blocked document never reaches it; the egress guard catches leaks.</li>
+    <li><b>File writer:</b> a scanned PDF copy is verified by OCR; blocked documents are not written.</li>
+  </ul>
+
+  <h2>13.2 Sample test cases (fictional documents, run on 14 October 2026)</h2>
+  <table>
+    <tr><th style="width:30%">Case</th><th style="width:33%">What it tests</th><th>Actual result</th></tr>
+    <tr><td>TC01 access_request.docx</td><td>Paragraphs, table, author property</td><td class="ok">SAFE · 9 PII · 3 people</td></tr>
+    <tr><td>TC02 org_chart.pptx</td><td>Table, text box, speaker notes, 3 phone formats</td><td class="ok">SAFE · 11 PII · 4 people</td></tr>
+    <tr><td>TC03 hr_record.pdf</td><td>10 PII types in a native PDF</td><td class="ok">SAFE · 10 PII</td></tr>
+    <tr><td>TC04 scanned_incident.pdf</td><td>Image-only page → OCR</td><td class="ok">SAFE · 5 PII · OCR used</td></tr>
+    <tr><td>TC05 no_pii_policy.docx</td><td>Hard negatives (false-positive test)</td><td class="ok">SAFE · 0 PII</td></tr>
+    <tr><td>TC06 name_variants.docx</td><td>4 spellings → one tag</td><td class="ok">SAFE · 7 PII</td></tr>
+    <tr><td>TC07 corrupted.pdf</td><td>Unreadable file</td><td class="bad">BLOCKED · extraction_failed</td></tr>
+    <tr><td>TC08 empty.docx</td><td>No body text</td><td class="ok">SAFE · 0 PII (file property counts as content)</td></tr>
+    <tr><td>TC09 screenshot_in_docx.docx</td><td>PII inside an embedded image</td><td class="ok">SAFE · 3 PII</td></tr>
+  </table>
+  <p>The checker (<code>sample_test_cases/check_test_cases.py</code>) reports <b>ALL PASS</b>, with two documented <b>known gaps</b>: a bare first name in TC06 and an OCR-merged name in TC09 (see chapter 15).</p>
+
+  <h2>13.3 Evaluation on the three real Cadence files (team harness)</h2>
+  <table>
+    <tr><th style="width:42%">Metric</th><th>Result</th></tr>
+    <tr><td>Recall (required PII found)</td><td><b>99.5 %</b> (1,002 / 1,007): PPTX 100 %, DOCX 100 %, scanned PDF 99.4 %</td></tr>
+    <tr><td>Residual PII values in sanitized output</td><td><b>0</b></td></tr>
+    <tr><td>Verifier said SAFE while PII remained</td><td><b>0</b> (consistent on all three files)</td></tr>
+    <tr><td>Structure retention</td><td><b>99.8–100 %</b> (brief's target ≥ 80 %)</td></tr>
+    <tr><td>Context retention (non-PII words kept)</td><td>98.3–100 %</td></tr>
+    <tr><td>Traceability (findings with correct location)</td><td>99.6 %</td></tr>
+    <tr><td>Type accuracy</td><td>100 %</td></tr>
+    <tr><td>Precision vs. gold labels</td><td>PPTX 100 %, DOCX 100 %, PDF 86 %</td></tr>
+    <tr><td>Processing time</td><td>~105 s for all three on 2 cores (scanned PDF OCR ~87 s)</td></tr>
+  </table>
+  <p class="small"><b>Interpretation and caveats.</b> The 5 "misses" were span-boundary differences; the PII itself was still redacted. Most PDF "false positives" were, on manual review, real PII missing from the automatically built gold labels (people without e-mail addresses, users in a screenshot, phone fragments). The gold labels were built by automated harvesting plus manual items and still need a human spot-check. These numbers come from <code>docs/evaluation.md</code> and were not re-run for this report.</p>
+
+  <h2>13.4 Metric definitions</h2>
+  <ul>
+    <li><b>Precision</b> = correct PII detections ÷ all detections.</li>
+    <li><b>Recall</b> = correct PII detections ÷ all actual PII in the labelled set (every occurrence counts).</li>
+    <li><b>Structure retention</b> = pages, slides and tables represented, plus non-PII words kept, compared with an independent reference extraction.</li>
+    <li><b>Residual PII</b> = an independent text search of the sanitized output for every labelled value.</li>
+  </ul>
+</section>
+
+<!-- ============================== 14 RESULTS ============================== -->
+<section class="chapter">
+  <h1><span class="num">14</span>Results against the brief</h1>
+  <table>
+    <tr><th style="width:36%">Brief expectation</th><th style="width:14%">Status</th><th>Evidence</th></tr>
+    <tr><td>Multiple formats incl. scanned documents</td><td class="ok">Met</td><td>PDF/DOCX/PPTX; OCR of scanned pages and embedded images; TC03/TC04/TC09.</td></tr>
+    <tr><td>Structure and context preserved (≥ 80 %)</td><td class="ok">Met</td><td>99.8–100 % structure, 98.3–100 % context (team harness).</td></tr>
+    <tr><td>Detect and classify PII</td><td class="ok">Met</td><td>35 recognizers + names; 100 % type accuracy (team harness).</td></tr>
+    <tr><td>Transparent tags</td><td class="ok">Met</td><td>Typed, consistent placeholders; one tag per person.</td></tr>
+    <tr><td>Redact before LLM processing</td><td class="ok">Met</td><td>Gate + SAFE-only AI layer + egress guard; tests.</td></tr>
+    <tr><td>Source traceability and explainability</td><td class="ok">Met</td><td>99.6 % traceability; Findings view.</td></tr>
+    <tr><td>Near-100 % coverage, no PII downstream</td><td class="ok">Met on samples</td><td>99.5 % recall and 0 residual on the Cadence files; 2 known gaps on our own harder fictional tests.</td></tr>
+    <tr><td>Working demonstration</td><td class="ok">Met</td><td>Local web app with six views; CLI; demo files.</td></tr>
+  </table>
+</section>
+
+<!-- ============================== 15 LIMITATIONS ============================== -->
+<section class="chapter">
+  <h1><span class="num">15</span>Limitations and known gaps</h1>
+  <h2>15.1 Known gaps found by our own tests</h2>
+  <table>
+    <tr><th style="width:16%">Case</th><th style="width:30%">What leaks</th><th style="width:27%">Why</th><th>Possible fix</th></tr>
+    <tr><td>TC06</td><td>A bare first name ("Rafael") after the full name was detected</td><td>Propagation covers distinctive surnames and some first names, but not this one</td><td>Propagate the capitalised first name of every confirmed person when it is not a common word.</td></tr>
+    <tr><td>TC09</td><td>"AnitaPatel" (OCR merged two words in a screenshot)</td><td>CamelCase OCR tokens are not split before name matching</td><td>Split merged CamelCase tokens; treat user lists in screenshots as PII by default.</td></tr>
+  </table>
+
+  <h2>15.2 General limitations</h2>
+  <ul>
+    <li><b>OCR quality</b> bounds recall on degraded scans; handwriting and vector images (EMF without LibreOffice, SVG) are flagged for manual review rather than read.</li>
+    <li><b>Ambiguous names</b> that are also ordinary words can be missed or over-redacted.</li>
+    <li><b>Identifier formats</b> outside the US/UK/EU/Indian formats in the test material need new patterns.</li>
+    <li><b>English only:</b> the NER model and lexicon are English.</li>
+    <li><b>Over-redaction</b> of business contact data is a deliberate security-first trade-off.</li>
+    <li><b>Evaluation:</b> the gold labels need a human spot-check; the Cadence files are not in this repository copy.</li>
+    <li><b>Deployment:</b> a single-user local app; no authentication, multi-user queue or central audit store yet.</li>
+    <li><b>UI:</b> the scroll-linked effects need a modern Chromium/Safari browser (others get simpler fades). The hero artwork overflows by about 5 px at very narrow phone widths.</li>
+  </ul>
+</section>
+
+<!-- ============================== 16 FUTURE ============================== -->
+<section class="chapter">
+  <h1><span class="num">16</span>Future work and production roadmap</h1>
+  <table>
+    <tr><th style="width:28%">Area</th><th>Next step</th></tr>
+    <tr><td>Close known gaps</td><td>First-name propagation, CamelCase OCR splitting, screenshot user-list rule; add both cases as regression tests.</td></tr>
+    <tr><td>Better name detection</td><td>Optional transformer NER (local model) behind the existing detector interface; larger spaCy model; multilingual models.</td></tr>
+    <tr><td>Human review</td><td>A review queue for "needs review" candidates and BLOCKED documents, with approve/override and an audit trail.</td></tr>
+    <tr><td>Evaluation</td><td>Human-verified gold set; harness in CI with minimum-recall and zero-residual gates on every change.</td></tr>
+    <tr><td>Formats</td><td>XLSX, e-mail (.eml/.msg), images (PNG/JPEG), plain text.</td></tr>
+    <tr><td>Enterprise deployment</td><td>The pipeline as a stateless service behind a queue, deployed as a <b>mandatory proxy</b> in front of the AI agent so no path bypasses it; horizontally scaled OCR workers; SSO; encrypted temporary storage; central append-only audit log (masked values only).</td></tr>
+    <tr><td>Policy controls</td><td>Per-entity policies (redact, tokenise, allow), per-department rules, reversible tokenisation in a secure vault where business processes need re-identification.</td></tr>
+  </table>
+</section>
+
+<!-- ============================== 17 OPERATING GUIDE ============================== -->
+<section class="chapter">
+  <h1><span class="num">17</span>Operating guide</h1>
+  <h2>17.1 Install</h2>
+<pre><code># 1. OCR engine (macOS)
+brew install tesseract
+# 2. Python environment and libraries (includes the spaCy English model)
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt</code></pre>
+  <h2>17.2 Run the application</h2>
+<pre><code>.venv/bin/streamlit run app/main.py          # opens http://localhost:8501
+# after editing code or .streamlit/config.toml: stop with Ctrl+C and start again</code></pre>
+  <div class="callout orange"><b class="t">About the Deploy button</b>Streamlit's "Deploy" button publishes the app to a hosted service, which would send documents off the machine. It is intentionally not used for this project.</div>
+  <h2>17.3 Command line, tests and checks</h2>
+<pre><code>.venv/bin/python pipeline.py file.pdf file.docx --out output [--redacted-files] [--analyze]
+#   writes &lt;name&gt;.report.json, &lt;name&gt;.sanitized.txt (SAFE only), redacted copy, AI brief; exit code 1 if anything BLOCKED
+.venv/bin/python -m pytest -q tests                          # 247 passed, 3 skipped
+.venv/bin/python sample_test_cases/check_test_cases.py        # ALL PASS (2 known gaps)</code></pre>
+  <h2>17.4 Configuration</h2>
+  <table>
+    <tr><th style="width:30%">Setting</th><th>Effect</th></tr>
+    <tr><td><code>.streamlit/config.toml</code></td><td>Light and dark theme colours (switch with the ⋮ menu); usage statistics disabled.</td></tr>
+    <tr><td><code>ANTHROPIC_API_KEY</code></td><td>Enables Claude in AI Analysis (sanitized SAFE text only); otherwise the offline brief is used.</td></tr>
+    <tr><td><code>ANTHROPIC_MODEL</code></td><td>Claude model id (default <code>claude-sonnet-5-5</code>).</td></tr>
+    <tr><td><code>TESSERACT_CMD</code></td><td>Path to Tesseract (Windows).</td></tr>
+    <tr><td><code>OCR_WORKERS</code></td><td>Parallel OCR processes (default: CPU count, max 8).</td></tr>
+    <tr><td><code>PII_SPACY_MODEL</code> / <code>PII_DISABLE_NER=1</code></td><td>Choose the spaCy model / use rules-only name detection.</td></tr>
+  </table>
+</section>
+
+<!-- ============================== 18 DELIVERABLES ============================== -->
+<section class="chapter">
+  <h1><span class="num">18</span>Deliverables and file inventory</h1>
+  <table>
+    <tr><th style="width:42%">Deliverable</th><th>Location</th></tr>
+    <tr><td>Working application</td><td><code>app/main.py</code>, <code>app/ui.py</code></td></tr>
+    <tr><td>Processing pipeline and CLI</td><td><code>pipeline.py</code>, <code>extraction/</code>, <code>detection/</code>, <code>redaction/</code>, <code>ai_layer/</code></td></tr>
+    <tr><td>Test suite and evaluation harness</td><td><code>tests/</code>, <code>evaluation/</code></td></tr>
+    <tr><td>Sample test cases, expected outputs, checker</td><td><code>sample_test_cases/</code> (README explains every case)</td></tr>
+    <tr><td>Interview deck (13 slides, editable)</td><td><code>presentation/Optiv_Case_Study_2_PII_Detection.pptx</code></td></tr>
+    <tr><td>Speaker notes and 12 Q&amp;As</td><td><code>presentation/Optiv_Presentation_Speaker_Notes.txt</code></td></tr>
+    <tr><td>Technical documentation</td><td><code>README.md</code>, <code>docs/detection.md</code>, <code>docs/redaction.md</code>, <code>docs/evaluation.md</code>, <code>docs/WEBSITE_GUIDE.md</code></td></tr>
+    <tr><td>This final report</td><td><code>presentation/PII_Gateway_Final_Report.pdf</code> (source: <code>presentation/report_src/</code>)</td></tr>
+  </table>
+  <h2>Project timeline (what we did)</h2>
+  <ol>
+    <li>Built the pipeline: extraction (incl. OCR), detection, redaction, verification gate, outputs, redacted-file writer, AI layer.</li>
+    <li>Built the evaluation harness and test suite; evaluated on the three Cadence files.</li>
+    <li>Ran the app locally; created the interview deck and speaker notes from the real implementation, with real screenshots.</li>
+    <li>Created nine fictional sample test cases with recorded outputs and an automatic checker; documented two known gaps honestly.</li>
+    <li>Designed the premium light/dark interface with motion, and later added a sidebar workspace with six views, keeping uploads and results across views.</li>
+    <li>Wrote the website guide and this final report.</li>
+  </ol>
+</section>
+
+<!-- ============================== APPENDICES ============================== -->
+<section class="chapter">
+  <h1><span class="num">A</span>Glossary</h1>
+  <table>
+    <tr><th style="width:24%">Term</th><th>Meaning</th></tr>
+    <tr><td>PII</td><td>Personally identifiable information: data that identifies a person directly (name, e-mail, ID number) or indirectly when combined with other data.</td></tr>
+    <tr><td>OCR</td><td>Optical character recognition: turning an image of text into machine-readable text (Tesseract here).</td></tr>
+    <tr><td>NER</td><td>Named-entity recognition: a language model that labels spans such as PERSON (spaCy here).</td></tr>
+    <tr><td>Placeholder / tag</td><td>A typed token such as <span class="tag">[PERSON_1]</span> that consistently replaces a value.</td></tr>
+    <tr><td>Checksum</td><td>A mathematical validity check (Luhn for cards, Verhoeff for Aadhaar, mod-97 for IBAN) that rules out random numbers.</td></tr>
+    <tr><td>Safety net</td><td>The independent regex scanner used in verification, at AI egress and for written files.</td></tr>
+    <tr><td>Gate</td><td>The decision step that marks a document SAFE or BLOCKED.</td></tr>
+    <tr><td>Egress guard</td><td>A final scan of outgoing text immediately before an AI call.</td></tr>
+    <tr><td>Fail closed</td><td>When in doubt, block; never release unverified content.</td></tr>
+    <tr><td>Recall / Precision</td><td>Share of real PII found / share of detections that are real PII.</td></tr>
+    <tr><td>Content block</td><td>One unit of extracted text together with its source location.</td></tr>
+  </table>
+
+  <h1 style="margin-top:9mm"><span class="num">B</span>Anticipated questions and answers</h1>
+  <table>
+    <tr><th style="width:32%">Question</th><th>Answer</th></tr>
+    <tr><td>Why not regular expressions alone?</td><td>Names have no fixed format and many numbers look like PII without being PII. Regex with checksums handles structured IDs; NER plus document evidence handles names.</td></tr>
+    <tr><td>How do you stop PII reaching the LLM?</td><td>Redact → independent re-scan → remediate → gate → egress guard. Only SAFE text is ever released; failed or partial extraction blocks.</td></tr>
+    <tr><td>What happens when OCR or extraction fails?</td><td>The document is BLOCKED with a reason. "Nothing read" is never treated as "nothing found".</td></tr>
+    <tr><td>How do you limit false positives?</td><td>Checksums, "only when labelled" rules, business-vocabulary filters and negative tests for policy and case IDs.</td></tr>
+    <tr><td>How do you measure structure retention?</td><td>Pages, slides, tables and non-PII words compared with an independent reference extraction; measured 99.8–100 % vs. the 80 % target.</td></tr>
+    <tr><td>Is 99.5 % recall enough?</td><td>Recall alone is not the guarantee; the independent re-scan and the gate are. Measured residual PII in released output was zero.</td></tr>
+    <tr><td>Why not use an LLM to detect PII?</td><td>Sending raw text to a hosted LLM would itself break the policy; a local LLM is heavy, slow and non-deterministic, which is hard to audit.</td></tr>
+    <tr><td>How is auditability achieved without storing PII?</td><td>Reports log type, location, method, confidence and gate reason, with masked values and per-run keyed hashes only.</td></tr>
+    <tr><td>How would you scale it?</td><td>Stateless service behind a queue, scaled OCR workers, deployed as a mandatory proxy in front of the AI agent.</td></tr>
+    <tr><td>What are the main limitations?</td><td>OCR quality, ambiguous names, untested locales, English-only NER, deliberate over-redaction, and gold labels pending human review.</td></tr>
+  </table>
+  <p class="muted small" style="margin-top:6mm">End of report. Optiv Case Study 2 · Text Analysis &amp; PII Detection · 14 October 2026.</p>
+</section>
+
+</body>
+</html>

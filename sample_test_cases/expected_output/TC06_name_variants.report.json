@@ -1,0 +1,57 @@
+{
+  "document_id": "6c1044e2",
+  "file_name": "TC06_name_variants.docx",
+  "status": "SAFE",
+  "reason": "verified_clean",
+  "error": "",
+  "verification_passes": 1,
+  "checks": [
+    "detector",
+    "safety_net"
+  ],
+  "redacted_count": 7,
+  "remediated_count": 0,
+  "counts_by_type": {
+    "PERSON": 5,
+    "EMPLOYEE_ID": 1,
+    "EMAIL": 1
+  },
+  "placeholders": {
+    "[PERSON_1]": {
+      "type": "PERSON",
+      "masked": "Na************be",
+      "value_hash": "4635c64e9e6b",
+      "occurrences": 4
+    },
+    "[EMPLOYEE_ID_1]": {
+      "type": "EMPLOYEE_ID",
+      "masked": "EM*****77",
+      "value_hash": "c174cd9fd191",
+      "occurrences": 1
+    },
+    "[PERSON_2]": {
+      "type": "PERSON",
+      "masked": "Ra*********ga",
+      "value_hash": "dfdb485a7263",
+      "occurrences": 1
+    },
+    "[EMAIL_1]": {
+      "type": "EMAIL",
+      "masked": "n.*****************om",
+      "value_hash": "5b03277e241c",
+      "occurrences": 1
+    }
+  },
+  "skipped": [],
+  "needs_review": 0,
+  "residual_count": 0,
+  "residuals": [],
+  "source_type": "docx",
+  "extraction": {
+    "parser": "python-docx",
+    "ocr_used": "false",
+    "status": "ok",
+    "block_count": 7
+  },
+  "redacted_blocks": 5
+}

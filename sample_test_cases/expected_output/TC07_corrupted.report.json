@@ -1,0 +1,25 @@
+{
+  "document_id": "c5c0e9a4",
+  "file_name": "TC07_corrupted.pdf",
+  "status": "BLOCKED",
+  "reason": "extraction_failed",
+  "error": "",
+  "verification_passes": 0,
+  "checks": [],
+  "redacted_count": 0,
+  "remediated_count": 0,
+  "counts_by_type": {},
+  "placeholders": {},
+  "skipped": [],
+  "needs_review": 0,
+  "residual_count": 0,
+  "residuals": [],
+  "source_type": "pdf",
+  "extraction": {
+    "parser": "",
+    "ocr_used": "false",
+    "status": "error",
+    "block_count": 0
+  },
+  "redacted_blocks": 0
+}

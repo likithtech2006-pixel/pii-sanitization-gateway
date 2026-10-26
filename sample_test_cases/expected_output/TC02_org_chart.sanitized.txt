@@ -1,0 +1,62 @@
+[slide 1 | shape Title 1 | paragraph 0]
+Risk Office: Contacts (FICTIONAL)
+
+[slide 1 | shape Table 2 | row 0 | col 0]
+Role
+
+[slide 1 | shape Table 2 | row 0 | col 1]
+Name
+
+[slide 1 | shape Table 2 | row 0 | col 2]
+Email
+
+[slide 1 | shape Table 2 | row 0 | col 3]
+Phone
+
+[slide 1 | shape Table 2 | row 1 | col 0]
+Chief Risk Officer
+
+[slide 1 | shape Table 2 | row 1 | col 1]
+[PERSON_1]
+
+[slide 1 | shape Table 2 | row 1 | col 2]
+[EMAIL_1]
+
+[slide 1 | shape Table 2 | row 1 | col 3]
+[PHONE_1]
+
+[slide 1 | shape Table 2 | row 2 | col 0]
+Risk Analyst
+
+[slide 1 | shape Table 2 | row 2 | col 1]
+[PERSON_2]
+
+[slide 1 | shape Table 2 | row 2 | col 2]
+[EMAIL_2]
+
+[slide 1 | shape Table 2 | row 2 | col 3]
+[PHONE_2]
+
+[slide 1 | shape Table 2 | row 3 | col 0]
+Compliance Lead
+
+[slide 1 | shape Table 2 | row 3 | col 1]
+[PERSON_3]
+
+[slide 1 | shape Table 2 | row 3 | col 2]
+[EMAIL_3]
+
+[slide 1 | shape Table 2 | row 3 | col 3]
+[PHONE_3]
+
+[slide 1 | shape TextBox 3 | paragraph 0]
+Escalations go to the Chief Risk Officer within 24 hours (policy RSK-4488).
+
+[slide notes | slide 1 | paragraph 0]
+Presenter: mention that [PERSON_2] covers the APAC region.
+
+[metadata | field last_modified_by]
+[PERSON_4]
+
+[metadata | field comments]
+generated using python-pptx

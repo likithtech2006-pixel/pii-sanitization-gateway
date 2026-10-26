@@ -1,0 +1,51 @@
+{
+  "document_id": "ae242e87",
+  "file_name": "TC11_tracked_changes.docx",
+  "status": "SAFE",
+  "reason": "verified_clean",
+  "error": "",
+  "verification_passes": 1,
+  "checks": [
+    "detector",
+    "safety_net"
+  ],
+  "redacted_count": 3,
+  "remediated_count": 0,
+  "counts_by_type": {
+    "PERSON": 1,
+    "EMPLOYEE_ID": 1,
+    "EMAIL": 1
+  },
+  "placeholders": {
+    "[PERSON_1]": {
+      "type": "PERSON",
+      "masked": "Ki*****ao",
+      "value_hash": "e37ebac732c0",
+      "occurrences": 1
+    },
+    "[EMPLOYEE_ID_1]": {
+      "type": "EMPLOYEE_ID",
+      "masked": "EM*****20",
+      "value_hash": "cb330bbf13f4",
+      "occurrences": 1
+    },
+    "[EMAIL_1]": {
+      "type": "EMAIL",
+      "masked": "pr*******************om",
+      "value_hash": "557408d52691",
+      "occurrences": 1
+    }
+  },
+  "skipped": [],
+  "needs_review": 0,
+  "residual_count": 0,
+  "residuals": [],
+  "source_type": "docx",
+  "extraction": {
+    "parser": "python-docx",
+    "ocr_used": "false",
+    "status": "ok",
+    "block_count": 6
+  },
+  "redacted_blocks": 2
+}

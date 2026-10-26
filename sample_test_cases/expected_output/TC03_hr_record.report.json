@@ -1,0 +1,100 @@
+{
+  "document_id": "8609af13",
+  "file_name": "TC03_hr_record.pdf",
+  "status": "SAFE",
+  "reason": "verified_clean",
+  "error": "",
+  "verification_passes": 1,
+  "checks": [
+    "detector",
+    "safety_net"
+  ],
+  "redacted_count": 10,
+  "remediated_count": 0,
+  "counts_by_type": {
+    "PERSON": 1,
+    "EMPLOYEE_ID": 1,
+    "DOB": 1,
+    "SSN": 1,
+    "PAN": 1,
+    "PASSPORT": 1,
+    "ADDRESS": 1,
+    "CREDIT_CARD": 1,
+    "IBAN": 1,
+    "IP_ADDRESS": 1
+  },
+  "placeholders": {
+    "[PERSON_1]": {
+      "type": "PERSON",
+      "masked": "Ka******er",
+      "value_hash": "83bcbc26db27",
+      "occurrences": 1
+    },
+    "[EMPLOYEE_ID_1]": {
+      "type": "EMPLOYEE_ID",
+      "masked": "EM*****77",
+      "value_hash": "f9a75b514a20",
+      "occurrences": 1
+    },
+    "[DOB_1]": {
+      "type": "DOB",
+      "masked": "14******94",
+      "value_hash": "6c766b2341ee",
+      "occurrences": 1
+    },
+    "[SSN_1]": {
+      "type": "SSN",
+      "masked": "21*******99",
+      "value_hash": "13cf90f82c06",
+      "occurrences": 1
+    },
+    "[PAN_1]": {
+      "type": "PAN",
+      "masked": "AB******4F",
+      "value_hash": "219da9582419",
+      "occurrences": 1
+    },
+    "[PASSPORT_1]": {
+      "type": "PASSPORT",
+      "masked": "K1****67",
+      "value_hash": "2e6fb2028e5f",
+      "occurrences": 1
+    },
+    "[ADDRESS_1]": {
+      "type": "ADDRESS",
+      "masked": "42**********************************04",
+      "value_hash": "77705f70c0f7",
+      "occurrences": 1
+    },
+    "[CREDIT_CARD_1]": {
+      "type": "CREDIT_CARD",
+      "masked": "41***************11",
+      "value_hash": "a9deb303b297",
+      "occurrences": 1
+    },
+    "[IBAN_1]": {
+      "type": "IBAN",
+      "masked": "GB***********************32",
+      "value_hash": "5d3b48183bf9",
+      "occurrences": 1
+    },
+    "[IP_ADDRESS_1]": {
+      "type": "IP_ADDRESS",
+      "masked": "19*********45",
+      "value_hash": "1bfc7b857edd",
+      "occurrences": 1
+    }
+  },
+  "skipped": [],
+  "needs_review": 0,
+  "residual_count": 0,
+  "residuals": [],
+  "source_type": "pdf",
+  "extraction": {
+    "parser": "pymupdf",
+    "ocr_used": "false",
+    "status": "ok",
+    "block_count": 3
+  },
+  "redacted_blocks": 1
+}

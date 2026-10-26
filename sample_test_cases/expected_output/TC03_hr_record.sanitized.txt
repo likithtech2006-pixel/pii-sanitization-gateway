@@ -1,0 +1,18 @@
+[page 1]
+Employee Onboarding Record (FICTIONAL)
+
+[page 1]
+Name: [PERSON_1]
+Staff ID: [EMPLOYEE_ID_1]
+Date of birth: [DOB_1]
+SSN: [SSN_1]
+PAN: [PAN_1]
+Passport number: [PASSPORT_1]
+Home address: [ADDRESS_1]
+Corporate card: [CREDIT_CARD_1]
+Salary account IBAN: [IBAN_1]
+Laptop IP address: [IP_ADDRESS_1]
+
+[page 1]
+Onboarding checklist: complete security awareness training (section 4.2) by 30 June 2026.
+Policy reference: GRP-POL-001, version 6.0.

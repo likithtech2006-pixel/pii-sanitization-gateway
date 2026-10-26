@@ -1,0 +1,28 @@
+{
+  "document_id": "b79fc086",
+  "file_name": "TC05_no_pii_policy.docx",
+  "status": "SAFE",
+  "reason": "verified_clean",
+  "error": "",
+  "verification_passes": 1,
+  "checks": [
+    "detector",
+    "safety_net"
+  ],
+  "redacted_count": 0,
+  "remediated_count": 0,
+  "counts_by_type": {},
+  "placeholders": {},
+  "skipped": [],
+  "needs_review": 0,
+  "residual_count": 0,
+  "residuals": [],
+  "source_type": "docx",
+  "extraction": {
+    "parser": "python-docx",
+    "ocr_used": "false",
+    "status": "ok",
+    "block_count": 7
+  },
+  "redacted_blocks": 0
+}

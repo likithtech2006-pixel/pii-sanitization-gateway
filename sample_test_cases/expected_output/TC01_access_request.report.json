@@ -1,0 +1,82 @@
+{
+  "document_id": "843a94d4",
+  "file_name": "TC01_access_request.docx",
+  "status": "SAFE",
+  "reason": "verified_clean",
+  "error": "",
+  "verification_passes": 1,
+  "checks": [
+    "detector",
+    "safety_net"
+  ],
+  "redacted_count": 9,
+  "remediated_count": 0,
+  "counts_by_type": {
+    "PERSON": 4,
+    "EMAIL": 3,
+    "PHONE": 1,
+    "EMPLOYEE_ID": 1
+  },
+  "placeholders": {
+    "[PERSON_1]": {
+      "type": "PERSON",
+      "masked": "Ra********ma",
+      "value_hash": "2cf62adeda9e",
+      "occurrences": 2
+    },
+    "[EMAIL_1]": {
+      "type": "EMAIL",
+      "masked": "ra*************om",
+      "value_hash": "a01048eb1049",
+      "occurrences": 1
+    },
+    "[PHONE_1]": {
+      "type": "PHONE",
+      "masked": "98******10",
+      "value_hash": "9c0a8ec42292",
+      "occurrences": 1
+    },
+    "[EMPLOYEE_ID_1]": {
+      "type": "EMPLOYEE_ID",
+      "masked": "EM****42",
+      "value_hash": "91eebc03e4e2",
+      "occurrences": 1
+    },
+    "[PERSON_2]": {
+      "type": "PERSON",
+      "masked": "Pr******ir",
+      "value_hash": "98f0dd3df0f0",
+      "occurrences": 1
+    },
+    "[EMAIL_2]": {
+      "type": "EMAIL",
+      "masked": "pr******************om",
+      "value_hash": "ef5592b3ca86",
+      "occurrences": 1
+    },
+    "[PERSON_3]": {
+      "type": "PERSON",
+      "masked": "Da*********ks",
+      "value_hash": "b521201a1223",
+      "occurrences": 1
+    },
+    "[EMAIL_3]": {
+      "type": "EMAIL",
+      "masked": "d.****************om",
+      "value_hash": "7189e8fd0c1a",
+      "occurrences": 1
+    }
+  },
+  "skipped": [],
+  "needs_review": 0,
+  "residual_count": 0,
+  "residuals": [],
+  "source_type": "docx",
+  "extraction": {
+    "parser": "python-docx",
+    "ocr_used": "false",
+    "status": "ok",
+    "block_count": 19
+  },
+  "redacted_blocks": 9
+}

@@ -1,0 +1,51 @@
+{
+  "document_id": "bda5e5e7",
+  "file_name": "TC10_prompt_injection.docx",
+  "status": "SAFE",
+  "reason": "verified_after_remediation",
+  "error": "",
+  "verification_passes": 2,
+  "checks": [
+    "detector",
+    "safety_net"
+  ],
+  "redacted_count": 3,
+  "remediated_count": 1,
+  "counts_by_type": {
+    "EMAIL": 1,
+    "PHONE": 1,
+    "PERSON": 1
+  },
+  "placeholders": {
+    "[EMAIL_1]": {
+      "type": "EMAIL",
+      "masked": "me******************om",
+      "value_hash": "e469109c621d",
+      "occurrences": 1
+    },
+    "[PHONE_1]": {
+      "type": "PHONE",
+      "masked": "+4************21",
+      "value_hash": "6adfda94f2c0",
+      "occurrences": 1
+    },
+    "[PERSON_1]": {
+      "type": "PERSON",
+      "masked": "Me******er",
+      "value_hash": "0de98ab19906",
+      "occurrences": 1
+    }
+  },
+  "skipped": [],
+  "needs_review": 0,
+  "residual_count": 0,
+  "residuals": [],
+  "source_type": "docx",
+  "extraction": {
+    "parser": "python-docx",
+    "ocr_used": "false",
+    "status": "ok",
+    "block_count": 5
+  },
+  "redacted_blocks": 2
+}

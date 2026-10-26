@@ -1,0 +1,16 @@
+[page 1]
+INCIDENT REPORT (FICTIONAL, SCANNED)
+
+[page 1]
+Reported by: [PERSON_1]
+
+[page 1]
+Contact: [EMAIL_1]
+Mobile: [PHONE_1]
+
+[page 1]
+Affected user: [PERSON_2] ([EMPLOYEE_ID_1])
+
+[page 1]
+Summary: phishing e-mail reported and quarantined.
+Ticket ISS-2026-0112 closed on 12 May 2026.

@@ -1,0 +1,28 @@
+{
+  "document_id": "737db0ef",
+  "file_name": "TC08_empty.docx",
+  "status": "SAFE",
+  "reason": "verified_clean",
+  "error": "",
+  "verification_passes": 1,
+  "checks": [
+    "detector",
+    "safety_net"
+  ],
+  "redacted_count": 0,
+  "remediated_count": 0,
+  "counts_by_type": {},
+  "placeholders": {},
+  "skipped": [],
+  "needs_review": 0,
+  "residual_count": 0,
+  "residuals": [],
+  "source_type": "docx",
+  "extraction": {
+    "parser": "python-docx",
+    "ocr_used": "false",
+    "status": "ok",
+    "block_count": 1
+  },
+  "redacted_blocks": 0
+}

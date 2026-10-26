@@ -1,0 +1,28 @@
+# Light and dark themes; switch with the ⋮ menu > Settings > Theme (or follow the system setting).
+[theme.light]
+primaryColor = "#F36F21"
+backgroundColor = "#F5F7FB"
+secondaryBackgroundColor = "#EAEFF6"
+textColor = "#0B1F3A"
+
+[theme.dark]
+primaryColor = "#F36F21"
+backgroundColor = "#060D1A"
+secondaryBackgroundColor = "#0F1F38"
+textColor = "#E7EDF6"
+
+# ---------------------------------------------------------------- security hardening
+[server]
+address = "127.0.0.1"            # listen on this machine only (the default listens on every network interface)
+enableXsrfProtection = true      # reject cross-site requests (uploads/forms) without a valid XSRF token
+enableCORS = true                # do not allow other origins to call the app
+maxUploadSize = 50               # MB, matches security/upload_guard.py (PII_GATEWAY_MAX_UPLOAD_MB)
+maxMessageSize = 200
+enableStaticServing = false
+
+[client]
+showErrorDetails = "none"        # never show exception text (which can contain document content) in the browser
+showErrorLinks = false           # no "search this error" links that would send error text to Google/ChatGPT
+
+[browser]
+gatherUsageStats = false         # no telemetry

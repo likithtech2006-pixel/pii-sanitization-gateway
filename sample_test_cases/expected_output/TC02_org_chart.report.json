@@ -1,0 +1,93 @@
+{
+  "document_id": "c957e36c",
+  "file_name": "TC02_org_chart.pptx",
+  "status": "SAFE",
+  "reason": "verified_clean",
+  "error": "",
+  "verification_passes": 1,
+  "checks": [
+    "detector",
+    "safety_net"
+  ],
+  "redacted_count": 11,
+  "remediated_count": 0,
+  "counts_by_type": {
+    "PERSON": 5,
+    "EMAIL": 3,
+    "PHONE": 3
+  },
+  "placeholders": {
+    "[PERSON_1]": {
+      "type": "PERSON",
+      "masked": "Ma***************rg",
+      "value_hash": "ff526d2c8df6",
+      "occurrences": 1
+    },
+    "[EMAIL_1]": {
+      "type": "EMAIL",
+      "masked": "m.***********************om",
+      "value_hash": "319d43b4a287",
+      "occurrences": 1
+    },
+    "[PHONE_1]": {
+      "type": "PHONE",
+      "masked": "+1*********14",
+      "value_hash": "907bb5b19507",
+      "occurrences": 1
+    },
+    "[PERSON_2]": {
+      "type": "PERSON",
+      "masked": "Ar*******ta",
+      "value_hash": "6a25c4ea837f",
+      "occurrences": 2
+    },
+    "[EMAIL_2]": {
+      "type": "EMAIL",
+      "masked": "ar************************om",
+      "value_hash": "af6690b4c5ee",
+      "occurrences": 1
+    },
+    "[PHONE_2]": {
+      "type": "PHONE",
+      "masked": "+4************18",
+      "value_hash": "520183e5f407",
+      "occurrences": 1
+    },
+    "[PERSON_3]": {
+      "type": "PERSON",
+      "masked": "So***********st",
+      "value_hash": "9b337f4c4caf",
+      "occurrences": 1
+    },
+    "[EMAIL_3]": {
+      "type": "EMAIL",
+      "masked": "s.************************om",
+      "value_hash": "5ff92ded41d5",
+      "occurrences": 1
+    },
+    "[PHONE_3]": {
+      "type": "PHONE",
+      "masked": "+9***********45",
+      "value_hash": "b5a5e103dacd",
+      "occurrences": 1
+    },
+    "[PERSON_4]": {
+      "type": "PERSON",
+      "masked": "St*******ny",
+      "value_hash": "04d07002aa0d",
+      "occurrences": 1
+    }
+  },
+  "skipped": [],
+  "needs_review": 0,
+  "residual_count": 0,
+  "residuals": [],
+  "source_type": "pptx",
+  "extraction": {
+    "parser": "python-pptx",
+    "ocr_used": "false",
+    "status": "ok",
+    "block_count": 21
+  },
+  "redacted_blocks": 11
+}

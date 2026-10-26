@@ -1,0 +1,64 @@
+{
+  "document_id": "3c8ce06b",
+  "file_name": "TC04_scanned_incident.pdf",
+  "status": "SAFE",
+  "reason": "verified_clean",
+  "error": "",
+  "verification_passes": 1,
+  "checks": [
+    "detector",
+    "safety_net"
+  ],
+  "redacted_count": 5,
+  "remediated_count": 0,
+  "counts_by_type": {
+    "PERSON": 2,
+    "EMAIL": 1,
+    "PHONE": 1,
+    "EMPLOYEE_ID": 1
+  },
+  "placeholders": {
+    "[PERSON_1]": {
+      "type": "PERSON",
+      "masked": "Th********wn",
+      "value_hash": "aea4aaa01624",
+      "occurrences": 1
+    },
+    "[EMAIL_1]": {
+      "type": "EMAIL",
+      "masked": "th********************om",
+      "value_hash": "c4f49c7fd848",
+      "occurrences": 1
+    },
+    "[PHONE_1]": {
+      "type": "PHONE",
+      "masked": "+1*************99",
+      "value_hash": "f6fe94bc5fce",
+      "occurrences": 1
+    },
+    "[PERSON_2]": {
+      "type": "PERSON",
+      "masked": "El*********va",
+      "value_hash": "55f6c5940568",
+      "occurrences": 1
+    },
+    "[EMPLOYEE_ID_1]": {
+      "type": "EMPLOYEE_ID",
+      "masked": "EM******71",
+      "value_hash": "ed139db0e3b3",
+      "occurrences": 1
+    }
+  },
+  "skipped": [],
+  "needs_review": 0,
+  "residual_count": 0,
+  "residuals": [],
+  "source_type": "pdf",
+  "extraction": {
+    "parser": "pymupdf",
+    "ocr_used": "true",
+    "status": "ok",
+    "block_count": 5
+  },
+  "redacted_blocks": 3
+}

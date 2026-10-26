@@ -1,0 +1,50 @@
+{
+  "document_id": "18edfabe",
+  "file_name": "TC09_screenshot_in_docx.docx",
+  "status": "SAFE",
+  "reason": "verified_clean",
+  "error": "",
+  "verification_passes": 1,
+  "checks": [
+    "detector",
+    "safety_net"
+  ],
+  "redacted_count": 3,
+  "remediated_count": 0,
+  "counts_by_type": {
+    "PERSON": 1,
+    "EMAIL": 2
+  },
+  "placeholders": {
+    "[PERSON_1]": {
+      "type": "PERSON",
+      "masked": "Jo******th",
+      "value_hash": "d09bf90b216e",
+      "occurrences": 1
+    },
+    "[EMAIL_1]": {
+      "type": "EMAIL",
+      "masked": "jo******************om",
+      "value_hash": "bf84951f6541",
+      "occurrences": 1
+    },
+    "[EMAIL_2]": {
+      "type": "EMAIL",
+      "masked": "an*******************om",
+      "value_hash": "6369e451e40e",
+      "occurrences": 1
+    }
+  },
+  "skipped": [],
+  "needs_review": 0,
+  "residual_count": 0,
+  "residuals": [],
+  "source_type": "docx",
+  "extraction": {
+    "parser": "python-docx",
+    "ocr_used": "true",
+    "status": "ok",
+    "block_count": 5
+  },
+  "redacted_blocks": 1
+}
